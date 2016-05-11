@@ -4,3 +4,5 @@ managementCMS是使用**Go Lang**开发。依托的是<a href="www.beego.me">***
 #Beego的下载安装
 go get github.com/astaxie/beego
 
+# 实现的目标
+
