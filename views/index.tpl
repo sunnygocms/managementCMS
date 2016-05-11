@@ -74,15 +74,16 @@
 
 <body>
   <header>
-    <h1 class="logo">Welcome to Beego</h1>
+    <h1 class="logo">Welcome to Sunnyregion CMS</h1>
+	<div>
+	<label name="lab_username">username:</label><input type="text" name="username" value="" />
+	<label name="lab_pwd">password:</label><input type="password" name="pwd" value="" />
+  </div>
     <div class="description">
       Beego is a simple & powerful Go web framework which is inspired by tornado and sinatra.
     </div>
   </header>
-  <div>
-	<input type="text" name="username" value="" />
-	<input type="password" name="pwd" value="" />
-  </div>
+  
   <footer>
     <div class="author">
       Official website:
