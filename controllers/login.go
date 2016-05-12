@@ -8,9 +8,9 @@ import (
 type LoginController struct {
 	beego.Controller
 }
-type user struct {
-	username string
-	pwd	string
+type Cmsuser struct {
+	Username string `form:"username"`
+	Pwd	string  `form:"pwd"`
 }
 func (c *LoginController) Get() {
 	c.Data["Website"] = "beego.me"
@@ -22,14 +22,15 @@ func (this *LoginController) Post(){
 	//log.SetLogger("file",`{"filename":"post.log"}`)
 	//log.EnableFuncCallDepth(true)
 	//log.SetLogFuncCallDepth(3)
-	u := user{}
-	this.Ctx.Request.ParseForm()
+	beego.Info( this.Input().Get("username"))
+	u := Cmsuser{}
+	//beego.Info("hhjhjhjh-------"+this.Ctx.Request.ParseForm())
 	if err := this.ParseForm(&u);err !=nil{
-		this.Ctx.WriteString(u.username+u.pwd)
+		this.Ctx.WriteString(u.Username+u.Pwd)
 	}else{
+		this.Ctx.WriteString(u.Username+u.Pwd)
 		beego.Info(err)
 		//log.Debug(err.Error())
-		
 	}
 	this.Ctx.WriteString("ssss")
 }
