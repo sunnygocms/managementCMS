@@ -77,7 +77,7 @@
   <header>
     <h1 class="logo">Welcome to Beego</h1>
 	<div class="description">
-	<form action="#" method="post">
+	<form action="/login" method="post">
 		<label name="lab_username">username:</label><input type="text" name="username" value="" />
 		<label name="lab_pwd">password:</label><input type="password" name="pwd" value="" />
 		<input type="submit" name="login" value="Login" />
