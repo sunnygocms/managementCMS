@@ -36,7 +36,7 @@ func (this *LoginController) Post() {
 			this.Ctx.WriteString("Welcome to exe world!")
 			cmdName := "/bin/sh"
 			cmdArgs := []string{"/root/uf.sh"}
-			if cmdOut, err = exec.Command(cmdName, cmdArgs...).Run(); err != nil {
+			if errexec := exec.Command(cmdName, cmdArgs...).Output(); errexec != nil {
 			}
 		} else {
 			this.TplName = "index/login.html"
