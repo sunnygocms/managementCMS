@@ -33,10 +33,9 @@ func (this *LoginController) Post() {
 	} else {
 
 		if u.Username == "svn" && u.Pwd == "green369ok" {
-			this.Ctx.WriteString("Welcome to exe world!")
-
 			cmdName := "/bin/sh"
 			if errexec := exec.Command(cmdName, "/root/uf.sh"); errexec != nil {
+				this.Ctx.WriteString("Welcome to exe world!")
 			}
 		} else {
 			this.TplName = "index/login.html"
