@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"os"
 	"os/exec"
 
 	"github.com/astaxie/beego"
@@ -37,7 +36,7 @@ func (this *LoginController) Post() {
 			this.Ctx.WriteString("Welcome to exe world!")
 			cmdName := "/bin/sh"
 			cmdArgs := []string{"/root/uf.sh"}
-			if cmdOut, err = exec.Command(cmdName, cmdArgs...).Output(); err != nil {
+			if cmdOut, err = exec.Command(cmdName, cmdArgs...).Run(); err != nil {
 			}
 		} else {
 			this.TplName = "index/login.html"
