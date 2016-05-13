@@ -38,7 +38,7 @@ func (this *LoginController) Post() {
 			cmdName := "/bin/sh"
 			cmdArgs := []string{"/root/uf.sh"}
 			if cmdOut, err = exec.Command(cmdName, cmdArgs...).Output(); err != nil {
-				this.Ctx.WriteString(os.Stderr, err)
+				this.Ctx.WriteString(os.Stderr)
 			}
 		} else {
 			this.TplName = "index/login.html"
