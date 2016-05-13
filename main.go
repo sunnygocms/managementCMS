@@ -1,11 +1,11 @@
 package main
 
 import (
-	_ "github.com/sunnygocms/managementCMS/routers"
 	"github.com/astaxie/beego"
+	_ "github.com/sunnygocms/managementCMS/routers"
 )
 
 func main() {
+	//	beego.SetStaticPath("/", "static")
 	beego.Run()
 }
-

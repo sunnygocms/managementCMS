@@ -1,0 +1,32 @@
+/*新闻抓取样式*/
+.content-menu a{color:#333;font-weight:700;font-size:14px;}
+.content-menu a:hover{color:red;}
+.collection_tab{margin:10px;font-size:14px; border-collapse:collapse;clear:both;}
+.collection_tab th{background: #ECECFF;}
+.collection_tab th,td{border:1px solid #CCC;padding:6px;}
+.collection_tab td a{color:#06c;text-decoration:none;}
+.collection_tab td a:hover{color:red;text-decoration:underline;}
+.tabBut li{list-style-type:none;float:left;margin:0 10px 10px 0;}
+.tabBut li a{color:#06c;font-size:14px;}
+.tabBut li a:hover{color:red;}
+#pages{font-size:13px;margin:10px 0;}
+#pages a{text-decoration:none;color:#06c;}
+#pages a:hover{text-decoration:underline;}
+.current{color:red;}
+.aui_border{background:#FDFDFD;}
+.aui_close{font-size:12px; float:right;}
+#myform{clear:both;}
+fieldset{margin:15px 0;border:1px solid #abcdef;}
+fieldset table{ border-collapse:collapse;font-size:14px;}
+.aui_main{width:900px;}
+.show_div_1{width:900px;}
+#atrDialogIframe_test{width:900px;}
+
+/* 美女和宝马 活动专题*/
+#specialMember{width:100%;font-size:13px;border-collapse:collapse;}
+#specialMember td,th{border:1px solid #CCC;padding:6px;}
+#specialMember th{background:#ececff;}
+#specialMember caption{font-size:14px;font-weight:700;margin-bottom:10px;}
+#specialBabPage{font-size:13px;margin:10px 0;text-align:center;}
+#specialBabPage a{text-decoration:none;color:#06F;}
+#specialBabPage a:hover{text-decoration:underline;}

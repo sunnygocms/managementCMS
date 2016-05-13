@@ -1,0 +1,102 @@
+body{font-size:13px;font-family:'Microsoft Yahei','simsun';margin:0;color:#333;}
+a{color:#000;text-decoration: none;}
+a:hover{color:#C00;}
+/* Form */
+fieldset{
+    border:1px solid #666;
+    border-radius:.25em;
+    margin:.5em;
+    box-shadow:1px 2px #ccc;
+}
+legend{
+    padding:.25em .5em;
+}
+form{
+    margin:.5em;
+}
+.buttons{border-top:1px solid #999;padding:.5em;}
+.buttons button{margin:0 .5em;}
+.field{zoom: 1;}
+.field:after{visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0;}
+.field label{float:left;display:inline;width:20%;text-align: right;max-width:100px;margin-right:.5em;cursor: pointer;font-weight:bold;}
+.field input{width:40em;}
+.field input[type=number]{width:4em;}
+.field input[type=datetime]{width:10em;}
+.field input[type=date],.field input[type=date]{width:10em;}
+.field textarea{width:40em;height:4em;resize: none;}
+/* Page*/
+table{border-left:1px solid #666;border-top:1px solid #666;width:100%;margin:.5em 0;}
+th,td{border-right:1px solid #666;border-bottom:1px solid #666;padding:.25em .5em;}
+th{background-color:#ddd;}
+thead th{
+    background: #eee;
+    background: -moz-linear-gradient(top, #eeeeee 0%, #cccccc 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#cccccc));
+    background: -webkit-linear-gradient(top, #eeeeee 0%,#cccccc 100%);
+    background: -o-linear-gradient(top, #eeeeee 0%,#cccccc 100%);
+    background: -ms-linear-gradient(top, #eeeeee 0%,#cccccc 100%);
+    background: linear-gradient(to bottom, #eeeeee 0%,#cccccc 100%);
+}
+tbody tr.even{background-color:#f8f8f8;}
+tbody tr:hover{background-color:#efe;}
+tbody tr:hover th{background-color:#ccc;}
+button,.button{
+    background: #eee;
+    background: -moz-linear-gradient(top, #eeeeee 0%, #cccccc 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#cccccc));
+    background: -webkit-linear-gradient(top, #eeeeee 0%,#ccc 100%);
+    background: -o-linear-gradient(top, #eeeeee 0%,#cccccc 100%);
+    background: -ms-linear-gradient(top, #eeeeee 0%,#cccccc 100%);
+    background: linear-gradient(to bottom, #eeeeee 0%,#cccccc 100%);
+    display:inline-block;
+    border:1px solid #999;
+    padding:.25em .5em;
+    color:#333;
+    border-radius:.25em;
+    cursor: pointer;
+    line-height:1.25em;
+}
+button:hover,.button:hover{
+    color:#333;
+    border-color:#666;
+    box-shadow:0 0 1px #000;
+}
+button:active,.button:active{
+    color:#444;
+    background: #eee none;
+    filter: none;
+}
+.btnbar,
+.pagebar{
+    margin:0;
+    padding:0 .5em;
+    line-height:2.8em;
+    border-top:1px solid #666;
+    border-bottom:1px solid #666;
+    background: #ffffff;
+    background: -moz-linear-gradient(top, #ffffff 0%, #e5e5e5 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5));
+    background: -webkit-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
+    background: -o-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
+    background: -ms-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
+    background: linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%);
+    text-align: right;
+}
+.btnbar{
+    float:left;
+    display:inline;
+}
+.pagebar a{
+}
+.pagebar .current{
+    font-weight:bold;
+    text-decoration: underline;
+    padding:0 .1em;
+}
+.info-important{
+	color:2em;font-weight:bold;
+	color:red;
+	text-align: center;
+	padding:.5em;
+	background:#fcc;
+}

@@ -79,7 +79,7 @@
 	<div class="description">
 	<form id="user" action="/login" method="post">
 		<label name="lab_username">username:</label>
-<input type="text" name="username" value="issssjksjdfajslk" />
+		<input type="text" name="username" value="" />
 		<label name="lab_pwd">password:</label><input type="password" name="pwd" value="" />
 		<input type="submit" name="login" value="Login" />
 	</form>
