@@ -1,7 +1,6 @@
 	window.onload = function (){
 		var txtUserName = document.getElementById("username");
 		var txtPassword = document.getElementById("password");
-		changeimg();
 		var username = readCookie("username");
 		if(username!="")
 		{

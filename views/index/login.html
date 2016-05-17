@@ -23,11 +23,11 @@
 		font-size: 12px
 	}
 </style>
-<script  type="text/javascript">	var weburl="/admin.php";
+<script  type="text/javascript">	var weburl="/";
 </script>
 <script  type="text/javascript" src="/static/Js/login.js"></script>
 <body>
-	<form  name="admininfo" action="/admin.php/Index/checkLogin" method="post">
+	<form  name="admininfo" action="/login" method="post">
 	<table border="0" cellspacing="0" cellpadding="0" width="100%" height="100%">
 	<tbody>
 		<tr>
@@ -76,14 +76,14 @@
 													<tr>
 														<td height="30" align="right">Password：</td>
 														<td style="PADDING-LEFT: 6px">
-															<input id="password"  class="input" type="password" name="password" value="">
+															<input id="password"  class="input" type="password" name="pwd" value="">
 														</td>
 													</tr>
 													<tr>
 														<td height="30" align="right">Verify：</td>
 														<td style="PADDING-LEFT: 6px">
-															<input id="verifycode" maxlength="4" size="5" name="verifycode" />
-															<img style="CURSOR: pointer" id="seedimg" title="点我刷新 " onclick="changeimg();" border="0" alt="点我刷新" align="absmiddle"   src="/admin.php/Index/verify" />
+															<input id="verifycode" maxlength="4" size="5" name="captcha" />
+															{{create_captcha}}
 														</td>
 													</tr>
 													<tr>
