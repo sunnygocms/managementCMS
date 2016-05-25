@@ -1,0 +1,12 @@
+
+<foreach name="tree" item="item">
+<li>
+    <empty name="item.module">
+        <span>{$item.name}</span>
+    <else/>
+        <span href="{:U($item['module'].'/'.$item['action'])}">{$item.name}</span>
+    </empty>
+    <notempty name="item.children">
+    </notempty>
+</li>
+</foreach>

@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" style="height:100%;">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>后台管理系统</title>
+        <script src="{{.viewpath}}/Js/jquery-1.8.0.min.js"></script>
+        <script src="{{.viewpath}}/Js/jquery.simple.tree.js"></script>
+        <link rel="stylesheet" href="{{.viewpath}}/Css/jquery.simple.tree.css" />
+        <style type="text/css">
+            td.loading::after{
+            position: absolute;
+            display:block;
+            content:"";
+            left:-1px;
+            right:-1px;
+            top:-1px;
+            bottom:-1px;
+            background: rgba(255,255,255,.5);
+            z-index: 1;
+            }
+        </style>
+        <script>
+            var simpleTreeCollection;
+            $(document).ready(function() {
+                simpleTreeCollection = $('.simpleTree').simpleTree({
+                    autoclose : true,
+                    afterClick : function(node) {
+                        var href = $('span:first', node).attr("href");
+                        if (href) {
+                            $("#mainFrame").attr("src", href).parent();
+                        } else {
+                            $(".simpleTree").get(0).nodeToggle(node.get(0));
+                        }
+                    },
+                    animate : false,
+                    drag : false
+                });
+                if($("#versionTest").css("color")=="red"){
+                    var $frame = $("#mainFrame");
+                    $frame.height($frame.parent().height());
+                    $(window).on("resize",function(){
+                        $frame.height($frame.parent().height());
+                    });
+                }
+            });
+
+        </script>
+        <style>
+            html{
+                overflow:hidden;
+            }
+            body {margin: 0px;font-size: 12px;overflow:hidden;position: relative;width:100%;height:100%;}
+            #head{}
+            #body{position:absolute;top:83px;left:0;right:0;bottom:0;}
+            #left{width:169px;position:absolute;left:0;height:100%;border-right:6px solid #0a5c8e;border-left:5px solid #0A5C8E;background:#0A5C8E }
+            #left .top{position:absolute; width:100%;top:3px;height:24px;background:url({{.viewpath}}/Images/left_bg.gif) no-repeat 0 0;font-size:12px; color:#bfdbeb;line-height:24px;text-align:center;}
+            #left .bottom{position:absolute; width:100%;bottom:8px;height:23px;background:url({{.viewpath}}/Images/left_bg.gif) no-repeat 0 -24px;height:1;font-size:12px; color:#bfdbeb;line-height:23px;text-align:center;}
+            #left .center{position:absolute; left:0;right:1px;top:27px;bottom:31px;background: #E5F4FD;border-right:1px solid #E5F4FD;overflow:auto;}
+            #content{position:absolute;left:180px;right:0;top:0;bottom:0;background: #FFFFFF;}
+            #content .top{background:url({{.viewpath}}/Images/main_26.gif) repeat-x;height:8px;position:absolute;top:0;width:100%;}
+            #content .top .left{background:url({{.viewpath}}/Images/main_24.gif) no-repeat;width:14px;height:8px;float:left;}
+            #content .top .right{background:url({{.viewpath}}/Images/main_28.gif) no-repeat;width:7px;height:8px;float:right;}
+            #content .bottom{background:url({{.viewpath}}/Images/main_48.gif) repeat-x;height:12px;position:absolute;bottom:0;width:100%;overflow:hidden;font-size:0;line-height:0;}
+            #content .bottom .left{background:url({{.viewpath}}/Images/main_46.gif) no-repeat;width:14px;height:12px;float:left;}
+            #content .bottom .right{background:url(__PUBLIC__/Images/main_50.gif) no-repeat;width:7px;height:12px;float:right;}
+            #content .center{position: absolute;left:0;right:0;border-right:3px solid #0A5C8E;padding:0 4px 0 6px;top:8px;bottom:12px;}
+            #mainFrame{width:100%;height:100%;background-color: #fff}
+            #body,#left .center, #content, #content .center,#mainFrame{
+                _width: expression(
+                  parseInt(this.offsetParent.clientWidth) - parseInt(this.currentStyle.left) - parseInt(this.currentStyle.right)
+                );
+                _height: expression(
+                  parseInt(this.offsetParent.clientHeight) - parseInt(this.currentStyle.top) - parseInt(this.currentStyle.bottom)
+                );
+            }
+            #versionTest{
+                color:black;
+                *color:red;
+                background-color:black;
+                _background-color:red;
+                display:none;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="versionTest">IE version tester,if ie6 background is red,if ie6/7 font color is red</div>
+        {{template "index/index_top.html" .}}
+        <div id="body">
+            <div id="left">
+                <div class="top">后台管理</div>
+                <div class="center">
+                    <include file="Index:tree"/>
+                </div>
+                <div class="bottom">Ver. 20160526</div>
+            </div>
+            <div id="content">
+                <div class="top">
+                    <div class="left"> </div>
+                    <div class="right"> </div>
+                </div>
+                <div class="center">
+                    <iframe name="mainFrame" id="mainFrame" src="/index/welcome" width=100% height=100% name="main" frameborder="0"> </iframe>
+                </div>
+                <div class="bottom">
+                    <div class="left"> </div>
+                    <div class="right"> </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

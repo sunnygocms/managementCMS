@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	font-size:13px;
+}
+.body{
+	text-align:center;
+	font-size: 18px;
+	margin-top: 100px;
+}
+</style>
+<link href="{{.viewpath}}/Css/mln.colselect.css" rel="stylesheet" type="text/css" />
+<script src="{{.viewpath}}/Js/jquery-1.8.0.min.js"></script>
+</head>
+
+<body>
+    <div class="body">
+    	<form name="fprm" action="__APP__/Index/alertPWD" method="post">
+    		<label>原密码：</label><input name="sourcepwd" type="password" /> <br />
+    		<label>新密码：</label><input name="pwd" type="password" /> <br />
+    		<label>确认码：</label><input name="repwd" type="password" /> <br />
+    		<input type="submit" name="submit" value="提交" />
+    	</form>
+    	
+    </div>
+    
+</body>
+</html>
