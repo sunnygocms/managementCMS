@@ -80,6 +80,7 @@
 	<form id="user" action="/login" method="post">
 		<label name="lab_username">username:</label>
 		<input type="text" name="username" value="" />
+		<input type="hidden" name ="type" value="svn" />
 		<label name="lab_pwd">password:</label><input type="password" name="pwd" value="" />
 		<input type="submit" name="login" value="Login" />
 	</form>

@@ -7,8 +7,10 @@ import (
 
 func init() {
 	beego.AutoRouter(&controllers.IndexController{})
-	beego.Router("/", &controllers.MainController{})
+	beego.AutoRouter(&controllers.LoginController{})
+	beego.Router("/svn", &controllers.MainController{})
 	beego.Router("/login", &controllers.LoginController{})
+	beego.Router("/", &controllers.IndexController{}, "*:Index")
 	//beego.Router("/index/:action([A-za-z]+)/?:id([0-9]+)/", &controllers.IndexController{}, "*:Index")
 
 }

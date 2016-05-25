@@ -14,14 +14,15 @@ type BaseController struct {
 }
 
 func (self *BaseController) Prepare() {
-	sess_username, _ := self.GetSession("username").(string)
-	if sess_username == "" {
-		self.TplNames = "login.html"
-		//		self.Render()
+	controller, action := self.GetControllerAndAction()
+	sess_username, _ := self.GetSession("editor_username").(string)
+	self.Data["viewpath"] = "/static"
+	if controller != "LoginController" && action != "Get" {
+		if sess_username == "" {
+			self.Ctx.Redirect(302, "/login")
+		}
+
 	}
-	//	 else {
-	//		self.Ctx.Redirect(302, "/index/index")
-	//	}
 }
 
 // @Title Get
