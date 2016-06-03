@@ -1,11 +1,8 @@
 package controllers
 
 import (
-	"crypto/md5"
-	"encoding/hex"
 	"os/exec"
 
-	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/cache"
 	"github.com/astaxie/beego/utils/captcha"
 	"github.com/sunnygocms/managementCMS/models"
@@ -36,9 +33,9 @@ func (this *LoginController) Index() {
 	this.TplName = "index/login.html"
 
 }
-func (c *LoginController) Get() {
+func (this *LoginController) Get() {
 
-	c.TplName = "index/login.html"
+	this.TplName = "index/login.html"
 }
 func (this *LoginController) Post() {
 	u := Cmsuser{}
@@ -53,15 +50,14 @@ func (this *LoginController) Post() {
 	} else {
 
 		if err := this.ParseForm(&u); err != nil {
-			beego.Info(err)
+			this.Info(err)
 		} else {
 			if !cpt.VerifyReq(this.Ctx.Request) {
 				this.Index()
 			} else {
-				m := md5.Sum([]byte(u.Pwd))
-				keyMd5 := hex.EncodeToString(m[:])
+
 				//			this.Ctx.WriteString(u.Username + "------" + keyMd5 + "----")
-				v := models.GetSunnyEditorByUsernameAndPwd(u.Username, keyMd5) //v, err := models.GetSunnyEditorById(1)
+				v := models.GetSunnyEditorByUsernameAndPwd(u.Username, this.SunnyMd5(u.Pwd)) //v, err := models.GetSunnyEditorById(1)
 				if v == nil {
 					this.Data["json"] = `[{'result':null}]`
 					this.TplName = "index/login.html"
@@ -78,7 +74,11 @@ func (this *LoginController) Post() {
 }
 func (this *LoginController) Logout() {
 	this.SetSession("editor_username", "")
-	this.SetSession("editor_userID", "")
+	this.SetSession("editor_userID", -1)
 	this.SetSession("editor_power", "")
 	this.Ctx.Redirect(302, "/login")
 }
+
+//func (this *LoginController) Alertpwd() {
+//	beego.Info(this.GetEditorId())
+//}

@@ -1,9 +1,11 @@
 package models
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/astaxie/beego/orm"
@@ -14,7 +16,6 @@ type SunnyPower struct {
 	PowerName  string `orm:"column(power_name);size(255);null"`
 	Controller string `orm:"column(controller);size(255);null"`
 	Action     string `orm:"column(action);size(255);null"`
-	EditId     int    `orm:"column(edit_id);null"`
 }
 
 func (t *SunnyPower) TableName() string {
@@ -146,4 +147,55 @@ func DeleteSunnyPower(id int) (err error) {
 		}
 	}
 	return
+}
+
+//get power array
+func GetEditorPowers(editorID int) (ml []interface{}, err error) {
+	var num int64
+	b := bytes.Buffer{}
+	var powMap map[string]interface{}
+	powMap = make(map[string]interface{})
+	b.WriteString("SELECT p.power_id AS id,p.power_name AS name,p.controller AS controller,p.action ")
+	b.WriteString("FROM sunny_power AS p RIGHT JOIN ( ")
+	b.WriteString("SELECT DISTINCT(gp.power_id) AS power_id ")
+	b.WriteString("FROM sunny_user_and_group ug ")
+	b.WriteString("RIGHT JOIN sunny_usergroup_and_power gp ON ug.user_group_id = gp.user_group_id ")
+	b.WriteString("WHERE ug.user_id =  ")
+	b.WriteString(strconv.Itoa(editorID))
+	b.WriteString(") k ")
+	b.WriteString("ON p.power_id = k.power_id ")
+	//	var fields []string
+	//	var power []SunnyPower
+	o := orm.NewOrm()
+	var maps []orm.Params
+	num, err = o.Raw(b.String()).Values(&maps)
+	_ = num
+	stmp := ""
+	var powerinterface []interface{}
+	i := 0
+	if err == nil {
+		for num, v := range maps {
+			if v["controller"].(string) == stmp {
+				powerinterface = append(powerinterface, v["action"].(string))
+			} else {
+				if len(stmp) > 0 {
+					powMap[stmp] = powerinterface
+					ml = append(ml, powMap)
+				}
+				stmp = v["controller"].(string)
+				powMap = make(map[string]interface{})
+				powerinterface = powerinterface[:0]
+				powerinterface = append(powerinterface, v["action"].(string))
+			}
+			i++
+			if i == num {
+				powMap[stmp] = powerinterface
+				ml = append(ml, powMap)
+			}
+		}
+		return ml, nil
+	} else {
+		return nil, err
+	}
+
 }

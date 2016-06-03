@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>无标题文档</title>
+        <link href="{{.viewpath}}/Css/tab.css" rel="stylesheet" type="text/css" />
+        <script>
+            function removeEditor(id){
+                if(confirm("真的删除？")){
+                    location.href = "{:U('/Editor/remove/id')}/"+id;
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div class="box-head">
+            <h2>编辑列表{{hi .Content .Other | str2html}}</h2>
+        </div>
+        <div class="box-body" >
+            <table class="sortable" id="tb-1" width="98%"  cellspacing="0" cellpadding="0">
+                <thead>
+                    <tr class="row">
+                        <th width="50">ID</th>
+                        <th>用户名</th>
+                        <th>备注</th>
+                        <th width="150">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <foreach name="list" item="item">
+                    <tr class="row">
+                        <th>{$item.id}</th>
+                        <td><s:a display="true" href="{:U('Editor/edit','id='.$item['id'])}">{$item.username}</s:a></td>
+                        <td>{$item.description}</td>
+                        <td>
+                            <s:a href="{:U('Editor/edit','id='.$item['id'])}">[编辑]</s:a>
+                            <s:power module="Editor" action="remove">
+                                <a href="javascript:removeEditor({$item['id']})">[删除]</a>
+                            </s:power>
+                        </td>
+                    </tr>
+                    </foreach>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <div class="operation">
+                    <s:a href="{:U('Editor/add')}"><span>添加编辑</span></s:a>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

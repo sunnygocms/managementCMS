@@ -60,6 +60,20 @@ func GetSunnyEditorByUsernameAndPwd(username string, password string) (v []*Sunn
 	return v
 }
 
+// GetSunnyEditorById retrieves SunnyEditor by id and password. Returns error if
+// Id doesn't exist
+func GetSunnyEditorByIdAndPwd(id int, password string) (v []*SunnyEditor) {
+	o := orm.NewOrm()
+	user := new(SunnyEditor)
+	qs := o.QueryTable(user)
+	qs.Filter("id", id).Filter("password", password).All(&v)
+	if len(v) == 0 {
+		return nil
+	}
+
+	return v
+}
+
 // GetAllSunnyEditor retrieves all SunnyEditor matches certain condition. Returns empty list if
 // no records exist
 func GetAllSunnyEditor(query map[string]string, fields []string, sortby []string, order []string,
@@ -143,6 +157,20 @@ func UpdateSunnyEditorById(m *SunnyEditor) (err error) {
 	if err = o.Read(&v); err == nil {
 		var num int64
 		if num, err = o.Update(m); err == nil {
+			fmt.Println("Number of records updated in database:", num)
+		}
+	}
+	return
+}
+
+//only update password
+func UpdatePasswordById(m *SunnyEditor) (err error) {
+	o := orm.NewOrm()
+	v := SunnyEditor{Id: m.Id}
+	// ascertain id exists in the database
+	if err = o.Read(&v); err == nil {
+		var num int64
+		if num, err = o.Update(m, "password"); err == nil {
 			fmt.Println("Number of records updated in database:", num)
 		}
 	}

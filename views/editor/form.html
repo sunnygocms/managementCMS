@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Editor</title>
+		<link href="__PUBLIC__/Css/tab.css" rel="stylesheet" type="text/css" />
+		<script src="__PUBLIC__/Js/jquery-1.8.0.min.js"></script>
+		<script src="__PUBLIC__/Js/jquery.validate.js"></script>
+		<script>
+		$(document).ready(function() 
+		{
+			$("#form").validate({
+				rules: {
+					username: "required",
+					password:{
+						equalTo: "#re_password"
+					}
+				},
+				messages: {
+					username: "请输入用户名",
+					password:{
+						equalTo: "两次密码不一致"
+					}
+				}
+			});
+		});
+		</script>
+	</head>
+
+	<body>
+		<div class="add">
+			<form method="post" name="form" id="form">
+				<fieldset>
+					<legend>
+						<if condition="ACTION_NAME eq 'add'">添加<else/>修改</if>编辑
+					</legend>
+					<p>
+						<label for="username">用户名：</label>
+						<input type="text"size="40" name="username" id="username" value="{$editor['username']}" <if condition="ACTION_NAME neq 'add'">disabled="disabled"</if>/>
+						<span class="field_desc"> *</span>
+					</p>
+					<p>
+						<label for="password">密码：</label>
+						<input size="40" name="password" type="password" id="password"/>
+					</p>
+					<p>
+						<label for="re_password">重复密码：</label>
+						<input size="40" type="password" id="re_password"/>
+					</p>
+					<p>
+						<label for="usergroup">所属用户组：</label>
+						<volist name="usergroup" id="vo">
+							<php>$temp=0 ;</php>
+							<volist name="user_and_group" id="vo1">
+								<if condition="$vo1['user_group_id'] eq $vo['user_group_id']"> <php>$temp=1;</php> </if>	
+							</volist>
+								<input size="40" type="checkbox" name="usergroup[]" value="{$vo.user_group_id}" <if condition="$temp eq 1" > checked="checked" </if>  id="a1" />{$vo.group_name}&nbsp;
+						</volist>
+					</p>
+					<p>
+						<label for="description" style="float:left; ">备注：</label>
+						<textarea style="resize:none;" cols="40" rows="5" name="description" id="description" maxlength="250">{$editor['description']}</textarea>
+					</p>
+					<button class="button_grey" type="submit" name="submit"><span>保 存</span></button>
+					<button class="button_grey" type="button" onclick="history.back()"><span>取消</span></button>
+				</fieldset>
+			</form>
+		</div>
+	</body>
+</html>

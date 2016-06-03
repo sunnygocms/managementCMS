@@ -7,6 +7,7 @@ import (
 
 func init() {
 	beego.AutoRouter(&controllers.IndexController{})
+	beego.AutoRouter(&controllers.EditorController{})
 	beego.AutoRouter(&controllers.LoginController{})
 	beego.Router("/svn", &controllers.MainController{})
 	beego.Router("/login", &controllers.LoginController{})

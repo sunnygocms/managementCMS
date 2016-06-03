@@ -10,15 +10,14 @@ import (
 )
 
 type SunnyNavigation struct {
-	Id       int    `orm:"column(id);auto"`
-	Level    int    `orm:"column(level)"`
-	ParentId int    `orm:"column(parent_id)"`
-	Module   string `orm:"column(module);size(32);null"`
-	Action   string `orm:"column(action);size(32);null"`
-	Name     string `orm:"column(name);size(32)"`
-	Sort     int    `orm:"column(sort)"`
-	EditId   int    `orm:"column(edit_id);null"`
-	Display  int8   `orm:"column(display)"`
+	Id         int    `orm:"column(id);auto"`
+	Level      int    `orm:"column(level)"`
+	ParentId   int    `orm:"column(parent_id)"`
+	Controller string `orm:"column(controller);size(32);null"`
+	Action     string `orm:"column(action);size(32);null"`
+	Name       string `orm:"column(name);size(32)"`
+	Sort       int    `orm:"column(sort)"`
+	Display    int8   `orm:"column(display)"`
 }
 
 func (t *SunnyNavigation) TableName() string {

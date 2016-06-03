@@ -62,7 +62,7 @@
             #content .top .right{background:url({{.viewpath}}/Images/main_28.gif) no-repeat;width:7px;height:8px;float:right;}
             #content .bottom{background:url({{.viewpath}}/Images/main_48.gif) repeat-x;height:12px;position:absolute;bottom:0;width:100%;overflow:hidden;font-size:0;line-height:0;}
             #content .bottom .left{background:url({{.viewpath}}/Images/main_46.gif) no-repeat;width:14px;height:12px;float:left;}
-            #content .bottom .right{background:url(__PUBLIC__/Images/main_50.gif) no-repeat;width:7px;height:12px;float:right;}
+            #content .bottom .right{background:url({{.viewpath}}/Images/main_50.gif) no-repeat;width:7px;height:12px;float:right;}
             #content .center{position: absolute;left:0;right:0;border-right:3px solid #0A5C8E;padding:0 4px 0 6px;top:8px;bottom:12px;}
             #mainFrame{width:100%;height:100%;background-color: #fff}
             #body,#left .center, #content, #content .center,#mainFrame{
@@ -90,7 +90,7 @@
             <div id="left">
                 <div class="top">后台管理</div>
                 <div class="center">
-                    <include file="Index:tree"/>
+                   {{template "index/tree.html" .}}
                 </div>
                 <div class="bottom">Ver. 20160526</div>
             </div>

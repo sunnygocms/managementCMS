@@ -35,7 +35,6 @@ CREATE TABLE `sunny_navigation` (
   `action` char(32) DEFAULT NULL COMMENT '那个module',
   `name` char(32) NOT NULL COMMENT '显示名称',
   `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序，越小越靠前',
-  `edit_id` int(11) DEFAULT NULL,
   `display` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否显示',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
@@ -44,11 +43,11 @@ CREATE TABLE `sunny_navigation` (
 -- Records of aqi_navigation
 -- ----------------------------
 
-INSERT INTO `sunny_navigation` VALUES ('1', '0', '0', '', '', '系统管理', '110', null, '1');
-INSERT INTO `sunny_navigation` VALUES ('2', '1', '1', 'Editor', 'page', '用户管理', '0', null, '1');
-INSERT INTO `sunny_navigation` VALUES ('3', '1', '1', 'UserGroup', 'page', '用户组管理', '0', null, '1');
-INSERT INTO `sunny_navigation` VALUES ('4', '1', '1', 'Power', 'page', '权限管理', '0', null, '1');
-INSERT INTO `sunny_navigation` VALUES ('5', '1', '1', 'Navigation', 'page', '菜单管理', '0', null, '1');
+INSERT INTO `sunny_navigation` VALUES ('1', '0', '0', '', '', '系统管理', '110',  '1');
+INSERT INTO `sunny_navigation` VALUES ('2', '1', '1', 'editor', 'page', '用户管理', '0','1');
+INSERT INTO `sunny_navigation` VALUES ('3', '1', '1', 'Usergroup', 'page', '用户组管理', '0', '1');
+INSERT INTO `sunny_navigation` VALUES ('4', '1', '1', 'power', 'page', '权限管理', '0',  '1');
+INSERT INTO `sunny_navigation` VALUES ('5', '1', '1', 'navigation', 'page', '菜单管理', '0',  '1');
 
 
 -- ----------------------------
@@ -60,30 +59,29 @@ CREATE TABLE `sunny_power` (
   `power_name` varchar(255) DEFAULT NULL COMMENT '权限名称',
   `controller` varchar(255) DEFAULT NULL COMMENT '权限所属的控制器',
   `action` varchar(255) DEFAULT NULL COMMENT '权限下面的action',
-  `edit_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`power_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='权限表';
 
 -- ----------------------------
 -- Records of aqi_power
 -- ----------------------------
-INSERT INTO `sunny_power` VALUES ('1', '频道管理：修改', 'Channel', 'edit', null);
-INSERT INTO `sunny_power` VALUES ('2', '用户：添加', 'Editor', 'add', null);
-INSERT INTO `sunny_power` VALUES ('3', '用户：修改', 'Editor', 'edit', null);
-INSERT INTO `sunny_power` VALUES ('4', '用户：浏览', 'Editor', 'page', null);
-INSERT INTO `sunny_power` VALUES ('5', '用户：删除', 'Editor', 'remove', null);
-INSERT INTO `sunny_power` VALUES ('6', '权限：添加', 'Power', 'add', null);
-INSERT INTO `sunny_power` VALUES ('7', '权限：修改', 'Power', 'edit', null);
-INSERT INTO `sunny_power` VALUES ('8', '权限：浏览', 'Power', 'page', null);
-INSERT INTO `sunny_power` VALUES ('9', '权限：删除', 'Power', 'del', null);
-INSERT INTO `sunny_power` VALUES ('10', '用户组：添加', 'UserGroup', 'add', null);
-INSERT INTO `sunny_power` VALUES ('11', '用户组：修改', 'UserGroup', 'edit', null);
-INSERT INTO `sunny_power` VALUES ('12', '用户组：浏览', 'UserGroup', 'page', null);
-INSERT INTO `sunny_power` VALUES ('13', '用户组：删除', 'UserGroup', 'del', null);
-INSERT INTO `sunny_power` VALUES ('14', '菜单管理：添加', 'Navigation', 'add', null);
-INSERT INTO `sunny_power` VALUES ('15', '菜单管理：修改', 'Navigation', 'edit', null);
-INSERT INTO `sunny_power` VALUES ('16', '菜单管理：删除', 'Navigation', 'remove', null);
-INSERT INTO `sunny_power` VALUES ('17', '菜单管理：浏览', 'Navigation', 'page', null);
+INSERT INTO `sunny_power` VALUES ('1', '频道管理：修改', 'channel', 'edit');
+INSERT INTO `sunny_power` VALUES ('2', '用户：添加', 'editor', 'add');
+INSERT INTO `sunny_power` VALUES ('3', '用户：修改', 'editor', 'edit');
+INSERT INTO `sunny_power` VALUES ('4', '用户：浏览', 'editor', 'page');
+INSERT INTO `sunny_power` VALUES ('5', '用户：删除', 'editor', 'remove');
+INSERT INTO `sunny_power` VALUES ('6', '权限：添加', 'power', 'add');
+INSERT INTO `sunny_power` VALUES ('7', '权限：修改', 'power', 'edit');
+INSERT INTO `sunny_power` VALUES ('8', '权限：浏览', 'power', 'page');
+INSERT INTO `sunny_power` VALUES ('9', '权限：删除', 'power', 'del');
+INSERT INTO `sunny_power` VALUES ('10', '用户组：添加', 'usergroup', 'add');
+INSERT INTO `sunny_power` VALUES ('11', '用户组：修改', 'usergroup', 'edit');
+INSERT INTO `sunny_power` VALUES ('12', '用户组：浏览', 'usergroup', 'page');
+INSERT INTO `sunny_power` VALUES ('13', '用户组：删除', 'usergroup', 'del');
+INSERT INTO `sunny_power` VALUES ('14', '菜单管理：添加', 'navigation', 'add');
+INSERT INTO `sunny_power` VALUES ('15', '菜单管理：修改', 'navigation', 'edit');
+INSERT INTO `sunny_power` VALUES ('16', '菜单管理：删除', 'navigation', 'remove');
+INSERT INTO `sunny_power` VALUES ('17', '菜单管理：浏览', 'navigation', 'page');
 
 
 
