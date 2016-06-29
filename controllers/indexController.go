@@ -3,8 +3,8 @@ package controllers
 //"github.com/astaxie/beego"
 import (
 	"errors"
-	"fmt"
-	"strconv"
+	//	"fmt"
+	//	"strconv"
 	"strings"
 
 	"github.com/sunnygocms/managementCMS/models"
@@ -63,7 +63,7 @@ func (this *IndexController) Alertpwd() {
 
 	if this.IsSubmit() {
 		editorID := this.GetEditorId()
-		this.Info("-------ID:" + strconv.Itoa(editorID))
+		//		this.Info("-------ID:" + strconv.Itoa(editorID))
 		alp := Alertpwd{}
 		if err := this.ParseForm(&alp); err != nil {
 			this.Info(err)
@@ -150,19 +150,19 @@ func (this *IndexController) GetAllNagigation() string {
 		}
 		this.Data["json"] = snTree
 	}
-	fmt.Println(snTree)
-	fmt.Println(fetchTree(snTree))
-	return fetchTree(snTree)
+	//	fmt.Println(snTree)
+	//	fmt.Println(fetchTree(snTree))
+	return this.fetchTree(snTree)
 }
 
 //把navigation拼接成html
-func fetchTree(children []Tree) string {
+func (this *IndexController) fetchTree(children []Tree) string {
 	html := ""
 	var navHtml, childrenHtml string
 	for _, nav := range children {
 		childrenHtml = ""
 		if nav.Children != nil {
-			childrenHtml = fetchTree(nav.Children)
+			childrenHtml = this.fetchTree(nav.Children)
 			if len(childrenHtml) > 0 {
 				childrenHtml = "<ul>" + childrenHtml + "</ul>"
 			}
@@ -171,9 +171,10 @@ func fetchTree(children []Tree) string {
 		navHtml = "<li><span"
 		if len(nav.Controller) > 0 && len(nav.Action) > 0 {
 			//权限管理
-			//	            if(!checkPower($nav["module"], $nav["action"])){
-			//	                continue;
-			//	            }
+
+			if !this.CheckPower(nav.Controller, nav.Action) {
+				continue
+			}
 			navHtml = navHtml + " href='/" + nav.Controller + "/" + nav.Action + "'"
 		}
 		navHtml = navHtml + ">" + nav.Name + "</span>" + childrenHtml + "</li>"

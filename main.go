@@ -15,6 +15,6 @@ func init() {
 }
 func main() {
 	//	beego.SetStaticPath("/", "static")
-	beego.AddFuncMap("hi", util.Hello)
+	beego.AddFuncMap("checkIsHref", util.CheckPower)
 	beego.Run()
 }

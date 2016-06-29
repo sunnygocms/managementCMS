@@ -7,9 +7,16 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/astaxie/beego/cache"
 	"github.com/astaxie/beego/orm"
 )
+
+//type UserPower struct {
+//	Element map[string][]string
+//}
+var mycache, _ = cache.NewCache("memory", `{"interval":600}`)
 
 type SunnyPower struct {
 	Id         int    `orm:"column(power_id);auto"`
@@ -23,6 +30,7 @@ func (t *SunnyPower) TableName() string {
 }
 
 func init() {
+
 	orm.RegisterModel(new(SunnyPower))
 }
 
@@ -43,6 +51,38 @@ func GetSunnyPowerById(id int) (v *SunnyPower, err error) {
 		return v, nil
 	}
 	return nil, err
+}
+
+//得到权限map
+func GetEditorPowersById(id int) (userpower interface{}, err error) { //
+	key := "power" + strconv.Itoa(id)
+	if mycache.IsExist(key) {
+		return mycache.Get(key), nil
+	} else {
+		o := orm.NewOrm()
+		var power []SunnyPower
+		var buf bytes.Buffer
+		var result = make(map[string][]string)
+		buf.WriteString("SELECT p.power_id AS id,p.power_name AS power_name,p.controller AS controller,p.action as action ")
+		buf.WriteString("FROM sunny_power AS p RIGHT JOIN ( ")
+		buf.WriteString("SELECT DISTINCT(gp.power_id) AS power_id ")
+		buf.WriteString("FROM sunny_user_and_group ug ")
+		buf.WriteString("RIGHT JOIN sunny_usergroup_and_power gp ON ug.user_group_id = gp.user_group_id ")
+		buf.WriteString("WHERE ug.user_id =  ")
+		buf.WriteString(strconv.Itoa(id))
+		buf.WriteString(") k ON p.power_id = k.power_id ")
+		num, _ := o.Raw(buf.String()).QueryRows(&power)
+		if num > 0 {
+			for _, p := range power {
+				result[p.Controller] = append(result[p.Controller], p.Action)
+			}
+			mycache.Put(key, result, 600*time.Second)
+			return result, nil
+		} else {
+			return nil, errors.New("not find")
+		}
+	}
+
 }
 
 // GetAllSunnyPower retrieves all SunnyPower matches certain condition. Returns empty list if

@@ -60,6 +60,19 @@ func GetSunnyEditorByUsernameAndPwd(username string, password string) (v []*Sunn
 	return v
 }
 
+//get Editor by username
+func GetSunnyEditorByUsername(username string) (v []*SunnyEditor) {
+	o := orm.NewOrm()
+	user := new(SunnyEditor)
+	qs := o.QueryTable(user)
+	qs.Filter("username", username).All(&v)
+	if len(v) == 0 {
+		return nil
+	}
+
+	return v
+}
+
 // GetSunnyEditorById retrieves SunnyEditor by id and password. Returns error if
 // Id doesn't exist
 func GetSunnyEditorByIdAndPwd(id int, password string) (v []*SunnyEditor) {
@@ -127,6 +140,32 @@ func GetAllSunnyEditor(query map[string]string, fields []string, sortby []string
 
 	var l []SunnyEditor
 	qs = qs.OrderBy(sortFields...)
+	if _, err := qs.Limit(limit, offset).All(&l, fields...); err == nil {
+		if len(fields) == 0 {
+			for _, v := range l {
+				ml = append(ml, v)
+			}
+		} else {
+			// trim unused fields
+			for _, v := range l {
+				m := make(map[string]interface{})
+				val := reflect.ValueOf(v)
+				for _, fname := range fields {
+					m[fname] = val.FieldByName(fname).Interface()
+				}
+				ml = append(ml, m)
+			}
+		}
+		return ml, nil
+	}
+	return nil, err
+}
+
+func GetAllEditor(fields []string, offset int64, limit int64) (ml []interface{}, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable(new(SunnyEditor))
+
+	var l []SunnyEditor
 	if _, err := qs.Limit(limit, offset).All(&l, fields...); err == nil {
 		if len(fields) == 0 {
 			for _, v := range l {

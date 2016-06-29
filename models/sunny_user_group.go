@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -42,6 +43,28 @@ func GetSunnyUserGroupById(id int) (v *SunnyUserGroup, err error) {
 		return v, nil
 	}
 	return nil, err
+}
+
+//get user_group
+func GetAllUserGroup() (ml []interface{}, err error) {
+	key := "AllUserGroup"
+	if mycache.IsExist(key) {
+		return mycache.Get(key).([]interface{}), nil
+	} else {
+
+		o := orm.NewOrm()
+		var usergroup []SunnyUserGroup
+		num, _ := o.Raw("select * from sunny_user_group").QueryRows(&usergroup)
+		if num > 0 {
+			for _, v := range usergroup {
+				ml = append(ml, v)
+			}
+			mycache.Put(key, ml, 600*time.Second)
+			return ml, nil
+		} else {
+			return nil, errors.New("not find")
+		}
+	}
 }
 
 // GetAllSunnyUserGroup retrieves all SunnyUserGroup matches certain condition. Returns empty list if

@@ -2,19 +2,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>无标题文档</title>
+        <title>editor</title>
         <link href="{{.viewpath}}/Css/tab.css" rel="stylesheet" type="text/css" />
         <script>
             function removeEditor(id){
                 if(confirm("真的删除？")){
-                    location.href = "{:U('/Editor/remove/id')}/"+id;
+                    location.href = "/Editor/remove/id/"+id;
                 }
             }
         </script>
     </head>
     <body>
         <div class="box-head">
-            <h2>编辑列表{{hi .Content .Other | str2html}}</h2>
+            <h2>编辑列表</h2>
         </div>
         <div class="box-body" >
             <table class="sortable" id="tb-1" width="98%"  cellspacing="0" cellpadding="0">
@@ -27,24 +27,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <foreach name="list" item="item">
+                    {{range $index, $elem := .Editor}}
                     <tr class="row">
-                        <th>{$item.id}</th>
-                        <td><s:a display="true" href="{:U('Editor/edit','id='.$item['id'])}">{$item.username}</s:a></td>
-                        <td>{$item.description}</td>
+                        <th>{{$elem.Id}}</th>
                         <td>
-                            <s:a href="{:U('Editor/edit','id='.$item['id'])}">[编辑]</s:a>
-                            <s:power module="Editor" action="remove">
+						{{if checkIsHref "editor" "edit" .Id  }}
+						<a href="/editor/edit/id/{{$elem.Id}}">{{$elem.Username}}</a>
+						{{else}}
+						{{$elem.Username}}
+						{{end}}
+						</td>
+                        <td>{{$elem.Description}}</td>
+                        <td>
+							{{if checkIsHref "editor" "edit" .Id  }}
+							<a href="/editor/edit/id/{{$elem.Id}}">[编辑]</a>
+							{{end}}
+                            {{if ne $elem.Username "admin" }}
                                 <a href="javascript:removeEditor({$item['id']})">[删除]</a>
-                            </s:power>
+                            {{end}}
                         </td>
                     </tr>
-                    </foreach>
+                    {{end}}
                 </tbody>
             </table>
             <div class="pagination">
                 <div class="operation">
-                    <s:a href="{:U('Editor/add')}"><span>添加编辑</span></s:a>
+				{{if checkIsHref "editor" "add" .Id  }}
+                    <a href="/editor/add"><span>添加编辑</span></a>
+				{{end}}
                 </div>
             </div>
         </div>

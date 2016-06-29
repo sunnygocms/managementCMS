@@ -3,10 +3,11 @@ package controllers
 import (
 	"crypto/md5"
 	"encoding/hex"
+	//	"fmt"
 
 	"github.com/astaxie/beego"
 	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/sunnygocms/managementCMS/models"
+	"github.com/sunnygocms/managementCMS/models"
 )
 
 type BaseController struct {
@@ -27,31 +28,13 @@ func (this *BaseController) Prepare() {
 	}
 }
 
-// @Title Get
-// @Description get SunnyEditor by id
-// @Param	id		path 	string	true		"The key for staticblock"
-// @Success 200 {object} models.SunnyEditor
-// @Failure 403 :id is empty
-// @router /:id [get]
-func (this *BaseController) GetOne() {
-	//	idStr := this.Ctx.Input.Param(":id")
-	//	id, _ := strconv.Atoi(idStr)
-	//	v, err := models.GetSunnyEditorById(id)
-	//	if err != nil {
-	//		this.Data["json"] = err.Error()
-	//	} else {
-	//		this.Data["json"] = v
-	//	}
-	//	this.ServeJSON()
-}
-
 //直接在页面输出字符串
 func (this *BaseController) Html(str string) {
 	this.Ctx.WriteString(str) //self.GetControllerAndAction()
 }
 
 //show message
-func (this *BaseController) Info(v interface{}) {
+func (this *BaseController) Info(v ...interface{}) {
 	beego.Info(v)
 }
 
@@ -130,5 +113,26 @@ func (this *BaseController) AjaxReturn(status int, msg string, data interface{})
 func (this *BaseController) SunnyMd5(str string) (keyMd5 string) {
 	m := md5.Sum([]byte(str))
 	keyMd5 = hex.EncodeToString(m[:])
+	return
+}
+
+//权限判断
+func (this *BaseController) CheckPower(controller string, action string) (result bool) {
+	power, err := models.GetEditorPowersById(this.GetEditorId())
+	if err != nil {
+		result = false
+	} else {
+		arr := power.(map[string][]string)
+		value, isExist := arr[controller]
+		result = false
+		if isExist {
+			for _, a := range value {
+				if a == action {
+					result = true
+					break
+				}
+			}
+		}
+	}
 	return
 }
