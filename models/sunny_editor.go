@@ -73,6 +73,21 @@ func GetSunnyEditorByUsername(username string) (v []*SunnyEditor) {
 	return v
 }
 
+//判断用户是不是已经存在
+func IsExistEditorByUsername(username string) (b bool) {
+	var v []*SunnyEditor
+	o := orm.NewOrm()
+	user := new(SunnyEditor)
+	qs := o.QueryTable(user)
+	qs.Filter("username", username).All(&v)
+	if len(v) == 0 {
+		b = false
+	} else {
+		b = true
+	}
+	return
+}
+
 // GetSunnyEditorById retrieves SunnyEditor by id and password. Returns error if
 // Id doesn't exist
 func GetSunnyEditorByIdAndPwd(id int, password string) (v []*SunnyEditor) {
@@ -161,12 +176,13 @@ func GetAllSunnyEditor(query map[string]string, fields []string, sortby []string
 	return nil, err
 }
 
+//取得用户列表
 func GetAllEditor(fields []string, offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(SunnyEditor))
 
 	var l []SunnyEditor
-	if _, err := qs.Limit(limit, offset).All(&l, fields...); err == nil {
+	if _, err := qs.Filter("Status", 1).Limit(limit, offset).All(&l, fields...); err == nil {
 		if len(fields) == 0 {
 			for _, v := range l {
 				ml = append(ml, v)
@@ -195,11 +211,26 @@ func UpdateSunnyEditorById(m *SunnyEditor) (err error) {
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Update(m); err == nil {
+		if num, err = o.Update(m, "Password", "Description"); err == nil {
 			fmt.Println("Number of records updated in database:", num)
 		}
 	}
 	return
+}
+
+//Delete editor  用户删除实际就是修改用户的状态
+func UpdateDelSunnyEditorById(m *SunnyEditor) (err error) {
+	o := orm.NewOrm()
+	v := SunnyEditor{Id: m.Id}
+	// ascertain id exists in the database
+	if err = o.Read(&v); err == nil {
+		var num int64
+		if num, err = o.Update(m, "Status"); err == nil {
+			fmt.Println("Number of records updated in database:", num)
+		}
+	}
+	return
+
 }
 
 //only update password

@@ -7,7 +7,7 @@
         <script>
             function removeEditor(id){
                 if(confirm("真的删除？")){
-                    location.href = "/Editor/remove/id/"+id;
+                    location.href = "/editor/del/id/"+id;
                 }
             }
         </script>
@@ -31,7 +31,7 @@
                     <tr class="row">
                         <th>{{$elem.Id}}</th>
                         <td>
-						{{if checkIsHref "editor" "edit" .Id  }}
+						{{if checkIsHref "editor" "edit" $.Id  }}
 						<a href="/editor/edit/id/{{$elem.Id}}">{{$elem.Username}}</a>
 						{{else}}
 						{{$elem.Username}}
@@ -39,11 +39,13 @@
 						</td>
                         <td>{{$elem.Description}}</td>
                         <td>
-							{{if checkIsHref "editor" "edit" .Id  }}
+							{{if checkIsHref "editor" "edit" $.Id  }}
 							<a href="/editor/edit/id/{{$elem.Id}}">[编辑]</a>
 							{{end}}
                             {{if ne $elem.Username "admin" }}
-                                <a href="javascript:removeEditor({$item['id']})">[删除]</a>
+								{{if checkIsHref "editor" "del" $.Id  }}
+                                <a href="javascript:removeEditor({{$elem.Id}})">[删除]</a>
+								{{end}}
                             {{end}}
                         </td>
                     </tr>

@@ -2,6 +2,7 @@ package util
 
 import (
 	"bytes"
+	//	"fmt"
 
 	"github.com/sunnygocms/managementCMS/models"
 )
@@ -31,18 +32,22 @@ func CheckIsHref(url string, target string, isPower bool) (link string) {
 
 //权限检查
 func CheckPower(controller string, action string, id int) (result bool) {
-	power, err := models.GetEditorPowersById(id)
-	if err != nil {
-		result = false
+	if id == 1 { //if admin,so have super power
+		result = true
 	} else {
-		arr := power.(map[string][]string)
-		value, isExist := arr[controller]
-		result = false
-		if isExist {
-			for _, a := range value {
-				if a == action {
-					result = true
-					break
+		power, err := models.GetEditorPowersById(id)
+		if err != nil {
+			result = false
+		} else {
+			arr := power.(map[string][]string)
+			value, isExist := arr[controller]
+			result = false
+			if isExist {
+				for _, a := range value {
+					if a == action {
+						result = true
+						break
+					}
 				}
 			}
 		}

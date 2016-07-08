@@ -26,13 +26,10 @@ type EditorInput struct {
 
 func (this *EditorController) URLMapping() {
 	this.Mapping("Post", this.Post)
-	//	this.Mapping("GetOne", this.GetOne)
-	//	this.Mapping("GetAll", this.GetAll)
-	//	this.Mapping("Put", this.Put)
 	this.Mapping("List", this.List)
 	this.Mapping("Edit", this.Edit)
 	this.Mapping("Add", this.Add)
-	this.Mapping("Delete", this.Delete)
+	this.Mapping("Del", this.Del)
 }
 
 // @Title Post
@@ -50,127 +47,6 @@ func (this *EditorController) Post() {
 		} else {
 			this.Data["json"] = err.Error()
 		}
-	} else {
-		this.Data["json"] = err.Error()
-	}
-	this.ServeJSON()
-}
-
-/**
-// @Title Get
-// @Description get SunnyEditor by id
-// @Param	id		path 	string	true		"The key for staticblock"
-// @Success 200 {object} models.SunnyEditor
-// @Failure 403 :id is empty
-// @router /:id [get]
-func (this *EditorController) GetOne() {
-	idStr := this.Ctx.Input.Param(":id")
-	id, _ := strconv.Atoi(idStr)
-	v, err := models.GetSunnyEditorById(id)
-	if err != nil {
-		this.Data["json"] = err.Error()
-	} else {
-		this.Data["json"] = v
-	}
-	this.ServeJSON()
-}
-
-// @Title Get All
-// @Description get SunnyEditor
-// @Param	query	query	string	false	"Filter. e.g. col1:v1,col2:v2 ..."
-// @Param	fields	query	string	false	"Fields returned. e.g. col1,col2 ..."
-// @Param	sortby	query	string	false	"Sorted-by fields. e.g. col1,col2 ..."
-// @Param	order	query	string	false	"Order corresponding to each sortby field, if single value, apply to all sortby fields. e.g. desc,asc ..."
-// @Param	limit	query	string	false	"Limit the size of result set. Must be an integer"
-// @Param	offset	query	string	false	"Start position of result set. Must be an integer"
-// @Success 200 {object} models.SunnyEditor
-// @Failure 403
-// @router / [get]
-func (this *EditorController) GetAll() {
-	var fields []string
-	var sortby []string
-	var order []string
-	var query map[string]string = make(map[string]string)
-	var limit int64 = 10
-	var offset int64 = 0
-
-	// fields: col1,col2,entity.col3
-	if v := this.GetString("fields"); v != "" {
-		fields = strings.Split(v, ",")
-	}
-	// limit: 10 (default is 10)
-	if v, err := this.GetInt64("limit"); err == nil {
-		limit = v
-	}
-	// offset: 0 (default is 0)
-	if v, err := this.GetInt64("offset"); err == nil {
-		offset = v
-	}
-	// sortby: col1,col2
-	if v := this.GetString("sortby"); v != "" {
-		sortby = strings.Split(v, ",")
-	}
-	// order: desc,asc
-	if v := this.GetString("order"); v != "" {
-		order = strings.Split(v, ",")
-	}
-	// query: k:v,k:v
-	if v := this.GetString("query"); v != "" {
-		for _, cond := range strings.Split(v, ",") {
-			kv := strings.Split(cond, ":")
-			if len(kv) != 2 {
-				this.Data["json"] = errors.New("Error: invalid query key/value pair")
-				this.ServeJSON()
-				return
-			}
-			k, v := kv[0], kv[1]
-			query[k] = v
-		}
-	}
-
-	l, err := models.GetAllSunnyEditor(query, fields, sortby, order, offset, limit)
-	if err != nil {
-		this.Data["json"] = err.Error()
-	} else {
-		this.Data["json"] = l
-	}
-	this.ServeJSON()
-}
-
-// @Title Update
-// @Description update the SunnyEditor
-// @Param	id		path 	string	true		"The id you want to update"
-// @Param	body		body 	models.SunnyEditor	true		"body for SunnyEditor content"
-// @Success 200 {object} models.SunnyEditor
-// @Failure 403 :id is not int
-// @router /:id [put]
-func (this *EditorController) Put() {
-	idStr := this.Ctx.Input.Param(":id")
-	id, _ := strconv.Atoi(idStr)
-	v := models.SunnyEditor{Id: id}
-	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &v); err == nil {
-		if err := models.UpdateSunnyEditorById(&v); err == nil {
-			this.Data["json"] = "OK"
-		} else {
-			this.Data["json"] = err.Error()
-		}
-	} else {
-		this.Data["json"] = err.Error()
-	}
-	this.ServeJSON()
-}
-*/
-// @Title Delete
-// @Description delete the SunnyEditor
-// @Param	id		path 	string	true		"The id you want to delete"
-// @Success 200 {string} delete success!
-// @Failure 403 id is empty
-// @router /:id [delete]
-func (this *EditorController) Delete() {
-	idStr := this.Ctx.Input.Param(":id")
-	id, _ := strconv.Atoi(idStr)
-	if err := models.DeleteSunnyEditor(id); err == nil {
-		this.Data["json"] = "OK"
 	} else {
 		this.Data["json"] = err.Error()
 	}
@@ -196,11 +72,44 @@ func (this *EditorController) List() {
 //编辑
 func (this *EditorController) Edit() {
 	if this.IsSubmit() {
-
+		//此处开始完成保存，保存分两部分一部分是 sunny_editor表，基本完成
+		//一部分是sunny_user_and_group表
+		ei := EditorInput{}
+		if err := this.ParseForm(&ei); err != nil {
+			this.Info(err)
+		} else {
+			if len(ei.Repwd) == 0 || len(ei.Password) == 0 {
+				this.Error("密码不能够为空", "-1", 4)
+				return
+			} else if ei.Password != ei.Repwd {
+				this.Error("新的密码两次输入不同", "-1", 4)
+				return
+			}
+			var sunnyeditor models.SunnyEditor
+			sunnyeditor.Id = ei.Id
+			sunnyeditor.Password = this.SunnyMd5(ei.Password)
+			sunnyeditor.Description = ei.Description
+			err := models.UpdateSunnyEditorById(&sunnyeditor)
+			if err != nil {
+				this.Info(err)
+			} else {
+				//TODO 先删除UserAndGroup里面user_id是这个id的所有组，在重新插入
+				//删除权限缓存
+				models.DeleteSunnyUserAndGroup(ei.Id)
+				for _, check := range ei.Usergroup {
+					var s models.SunnyUserAndGroup
+					s.UserGroupId = check
+					s.UserId = ei.Id
+					models.AddSunnyUserAndGroup(&s)
+				}
+				models.ClearPowerCacheById(ei.Id) //清除权利缓存
+			}
+			this.Success("成功了", "/editor/list", 4)
+		}
 	} else {
 		_, action_name := this.GetControllerAndAction()
 		this.Data["ACTION_NAME"] = action_name
-		usergroup, _ := models.GetAllUserGroup()
+		usergroup, _ := models.GetAllUserGroup("where active=1")
 		this.Data["Usergroup"] = usergroup
 		var id int
 		mapp := this.Ctx.Input.Params()
@@ -228,41 +137,71 @@ func (this *EditorController) Add() {
 		if err := this.ParseForm(&ei); err != nil {
 			this.Info(err)
 		} else {
+			if len(ei.Username) == 0 {
+				this.Error("用户名不能够为空", "-1", 4)
+				return
+			}
 			if len(ei.Repwd) == 0 || len(ei.Password) == 0 {
 				this.Error("密码不能够为空", "-1", 4)
+				return
 			} else if ei.Password != ei.Repwd {
 				this.Error("新的密码两次输入不同", "-1", 4)
+				return
 			}
-			//TODO 此处开始完成保存，保存分两部分一部分是 sunny_editor表，基本完成
-			//一部分是sunny_user_and_group表
-			//删除缓存
-			var sunnyeditor models.SunnyEditor
-			sunnyeditor.Username = ei.Username
-			sunnyeditor.Password = this.SunnyMd5(ei.Password)
-			sunnyeditor.Description = ei.Description
-			sunnyeditor.Avatar = ""
-			sunnyeditor.Status = 1
-			id, err := models.AddSunnyEditor(&sunnyeditor)
-			if err != nil {
-				this.Info(err)
+			//此处判断是否用户名重复
+			bEditor := models.IsExistEditorByUsername(ei.Username)
+			this.Info(bEditor)
+			if bEditor {
+				this.Error("这个用户名已经被使用", "-1", 4)
+				return
 			} else {
-				for _, check := range ei.Usergroup {
-					var s models.SunnyUserAndGroup
-					s.UserGroupId = check
-					s.UserId = int(id)
-					models.AddSunnyUserAndGroup(&s)
+				//此处开始完成保存，保存分两部分一部分是 sunny_editor表，基本完成
+				//一部分是sunny_user_and_group表
+				var sunnyeditor models.SunnyEditor
+				sunnyeditor.Username = ei.Username
+				sunnyeditor.Password = this.SunnyMd5(ei.Password)
+				sunnyeditor.Description = ei.Description
+				sunnyeditor.Avatar = ""
+				sunnyeditor.Status = 1
+				id, err := models.AddSunnyEditor(&sunnyeditor)
+				if err != nil {
+					this.Info(err)
+				} else {
+					for _, check := range ei.Usergroup {
+						var s models.SunnyUserAndGroup
+						s.UserGroupId = check
+						s.UserId = int(id)
+						models.AddSunnyUserAndGroup(&s)
+					}
 				}
-
+				this.Success("成功了", "/editor/list", 4)
 			}
-			this.Success("成功了", "/editor/list", 4)
+
 		}
-		//		models.GetSunnyEditorByUsername()
+
 	} else {
 		_, action_name := this.GetControllerAndAction()
 		this.Data["ACTION_NAME"] = action_name
-		usergroup, _ := models.GetAllUserGroup()
+		usergroup, _ := models.GetAllUserGroup("where active=1")
 		this.Data["Usergroup"] = usergroup
 		this.TplName = "editor/form.html"
+	}
+
+}
+
+//删除用户
+func (this *EditorController) Del() {
+	var id int
+	var sunnyeditor models.SunnyEditor
+	mapp := this.Ctx.Input.Params()
+	id, _ = strconv.Atoi(mapp["1"])
+
+	sunnyeditor.Id = id
+	sunnyeditor.Status = 0
+	if err := models.UpdateDelSunnyEditorById(&sunnyeditor); err == nil {
+		this.Success("删除成功了", "/editor/list", 4)
+	} else {
+		this.Success("删除失败", "/editor/list", 4)
 	}
 
 }

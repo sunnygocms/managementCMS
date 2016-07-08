@@ -4,6 +4,8 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	//	"fmt"
+	"encoding/json"
+	"strconv"
 
 	"github.com/astaxie/beego"
 	_ "github.com/go-sql-driver/mysql"
@@ -35,7 +37,7 @@ func (this *BaseController) Html(str string) {
 
 //show message
 func (this *BaseController) Info(v ...interface{}) {
-	beego.Info(v)
+	beego.Info("========>", v)
 }
 
 //get editor id
@@ -135,4 +137,49 @@ func (this *BaseController) CheckPower(controller string, action string) (result
 		}
 	}
 	return
+}
+
+//func (this *BaseController) GetActionName() {
+//	_, action_name := this.GetControllerAndAction()
+//	this.Data["ACTION_NAME"] = action_name
+//}
+
+func (c *BaseController) SunnyJSON(encoding ...bool) string {
+	//	var (
+	//		hasIndent   = true
+	//		hasEncoding = false
+	//	)
+	//	if BConfig.RunMode == PROD {
+	//		hasIndent = false
+	//	}
+	//	if len(encoding) > 0 && encoding[0] == true {
+	//		hasEncoding = true
+	//	}
+
+	//	if hasIndent {
+	//		content, err = json.MarshalIndent(data, "", "  ")
+	//	} else {
+	//		content, err = json.Marshal(data)
+	//	}
+	//	if err != nil {
+	//		http.Error(output.Context.ResponseWriter, err.Error(), http.StatusInternalServerError)
+	//		return err
+	//	}
+	content, _ := json.MarshalIndent(c.Data["json"], "", "  ")
+	s := string(content)
+	return s
+
+}
+func stringsToJSON(str string) string {
+	rs := []rune(str)
+	jsons := ""
+	for _, r := range rs {
+		rint := int(r)
+		if rint < 128 {
+			jsons += string(r)
+		} else {
+			jsons += "\\u" + strconv.FormatInt(int64(rint), 16) // json
+		}
+	}
+	return jsons
 }

@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>权限</title>
+<link href="{{.viewpath}}/Css/tab.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="{{.viewpath}}/Js/jquery-1.7.2.min.js"></script>
+
+<script language="JavaScript">
+$(document).ready(function() {
+
+$("#savebtn").bind("click",function(){
+	if ($("#power_name").val()==""){alert("请填写权限标题");$("#power_name").focus(); return false;}
+	});
+});
+
+</script>
+</head>
+
+<body>
+<div class="add">
+<form method="post" id="form">
+<fieldset>
+    <legend>
+	{{if eq .ACTION_NAME "Add"}}添加	{{else}}修改	{{end}}
+	权限
+	</legend>
+	<p>
+		<label for="power_name">权限名称：</label>
+		<input type="text"size="20" name="power_name" id="power_name" value="{{.Data.PowerName}}" />
+		<span class="field_desc">如果用全角冒号“：”分割，则会按照冒号之前的名字进行分组显示</span><input type="hidden" name="id" value="{{.Data.Id}}" />
+	</p>
+	<p>
+		<label for="controller">控制器名称：</label>
+		<input type="text" name="controller"  value="{{.Data.Controller}}" >
+		<span class="controller">&nbsp;&nbsp;建议技术人员修改</span>
+	</p>
+	
+	<p>
+		<label for="action">Action名称：</label>
+		<input type="text" name="action"  value="{{.Data.Action}}" >
+		<span class="action">&nbsp;&nbsp;建议技术人员修改</span>
+	</p>
+	<button class="button_grey" type="submit" name="submit" id="savebtn"><span>保 存</span></button>
+</fieldset>
+</form>
+</div>
+</body>
+</html>

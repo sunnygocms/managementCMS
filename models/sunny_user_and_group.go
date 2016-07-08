@@ -48,3 +48,25 @@ func AddSunnyUserAndGroups(m []SunnyUserAndGroup) (id int64, err error) {
 	id, err = o.InsertMulti(len(m), m)
 	return
 }
+
+//Delete
+func DeleteSunnyUserAndGroup(id int) (err error) {
+	o := orm.NewOrm()
+	v := SunnyUserAndGroup{UserId: id}
+	// ascertain id exists in the database
+	if err = o.Read(&v); err == nil {
+		_, err = o.Delete(&SunnyUserAndGroup{UserId: id})
+	}
+	return
+}
+
+//Delete SunnyUserAndGroup By UserGroupId
+func DeleteSunnyUserAndGroupByUserGroupId(id int) (err error) {
+	o := orm.NewOrm()
+	v := SunnyUserAndGroup{UserGroupId: id}
+	// ascertain id exists in the database
+	if err = o.Read(&v); err == nil {
+		_, err = o.Delete(&SunnyUserAndGroup{UserGroupId: id})
+	}
+	return
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>无标题文档</title>
+        <link href="{{.viewpath}}/Css/tab.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="{{.viewpath}}/Js/jquery-1.7.2.min.js"></script>
+        <script language="javascript">
+            $(function() {
+                $(".del").click(function() {
+                    return confirm("确定要删除此记录吗？");
+                });
+            });
+
+        </script>
+    </head>
+
+    <body>
+        <div class="box-head">
+            <h2>权限列表</h2>
+        </div>
+        <div class="box-body" >
+            <div class="pagination">
+                <div class="operation">
+					{{if checkIsHref "power" "add" .Id  }}
+                        <a href="/power/add"><span>创建新权限</span></a>
+                    {{end}} 
+                </div>
+            </div>
+            <table class="sortable" id="tb-1" width="98%"  cellspacing="0" cellpadding="0">
+                <thead>
+                    <tr class="row">
+                        <th class="th-1" width="10%">编号</th>
+                        <th class="th-2" width="30%">权限名称</th>
+                        <th class="th-2" width="15%">控制器名称</th>
+                        <th class="th-2" width="15%">Action名称</th>
+                        <th class="th-7" width="10%">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range $index, $vo := .Power}}
+                        <tr class="">
+                            <td class="td-1">{{$vo.Id}}</td>
+                            <td class="td-3">
+							{{if checkIsHref "power" "edit" $.Id  }}
+                                <a href="/power/edit/id/{{$vo.Id}}">{{$vo.PowerName}}</a>
+							{{else}}
+								{{$vo.PowerName}}
+							{{end}}
+                            <td class="td-1">{{$vo.Controller}}</td>
+                            <td class="td-1">{{$vo.Action}}</td>
+                            <td class="td-7">
+								{{if checkIsHref "power" "edit" $.Id  }}
+                                <a href="/power/edit/id/{{$vo.Id}}">【编辑】</a>
+								{{end}}
+								{{if checkIsHref "power" "del" $.Id  }}
+                                <a href="/power/del/id/{{$vo.Id}}" class="del">【删除】</a>
+								{{end}}
+							 </td>
+                        </tr>
+                    {{end}}
+
+                </tbody><tfoot></tfoot>
+            </table>
+            <div class="pagination">
+                <div class="operation">
+                    {{if checkIsHref "power" "add" .Id  }}
+                        <a href="/power/add"><span>创建新权限</span></a>
+                    {{end}} 
+                </div>
+                <ul class="page-nav">
+                    {$page}
+                </ul>
+            </div>
+        </div>
+
+    </body>
+</html>

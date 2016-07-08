@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>usergroup</title>
+        <link href="{{.viewpath}}/Css/tab.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="{{.viewpath}}/Js/jquery-1.7.2.min.js"></script>
+        <script language="javascript">
+            $(function() {
+                $(".del").click(function() {
+                    return confirm("确定要删除此记录吗？");
+                });
+            });
+
+        </script>
+
+    </head>
+
+    <body>
+        <div class="box-head">
+            <h2>用户组列表</h2>
+        </div>
+        <div class="box-body" >
+
+            <table class="sortable" id="tb-1" width="98%"  cellspacing="0" cellpadding="0">
+                <thead>
+                    <tr class="row">
+                        <th class="th-1" width="10%">编号</th>
+                        <th class="th-2" width="10%">用户组名称</th>
+						<th class="th-3" width="30%">描述</th>
+						<th class="th-4" width="20%">是否可用</th>
+                        <th class="th-7" width="20%">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range $index, $elem := .Usergroup}}
+                        <tr>
+                            <td class="td-1">{{$elem.Id}}</td>
+                            <td class="td-2" >
+								{{if checkIsHref "usergroup" "edit" $.Id  }}
+                                <a href="/usergroup/edit/id/{{$elem.Id}}">{{$elem.GroupName}}</a>
+								{{else}}
+								{{$elem.GroupName}}
+								{{end}}
+                            </td>
+							<td class="td-3">{{$elem.Description}}</td>
+							<td class="td-4">
+							{{if eq $elem.Active 1}}
+							可用
+							{{else}}
+							不可用
+							{{end}}
+							</td>
+                            <td class="td-7">
+								{{if checkIsHref "usergroup" "edit" $.Id  }}
+                                <a href="/usergroup/edit/id/{{$elem.Id}}">【编辑】</a>
+								{{end}}
+								{{if ne $elem.GroupName "系统管理" }}
+									{{if checkIsHref "usergroup" "del" $.Id  }}
+	                                <a href="/usergroup/del/id/{{$elem.Id}}" class="del">【删除】</a>
+									{{end}}
+	                            {{end}}
+                            </td>
+                        </tr>
+                    {{end}}
+                </tbody>
+            </table>
+            <div class="pagination">
+                <div class="operation">
+					{{if checkIsHref "usergroup" "add" $.Id  }}
+                        <a href="/usergroup/add"><span>创建用户组</span></a>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

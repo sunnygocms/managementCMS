@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>添加用户组</title>
+<link href="{{.viewpath}}/Css/tab.css" rel="stylesheet" type="text/css" />
+<style>
+    #powers fieldset{margin-bottom:6px;}
+    #powers fieldset legend{font-size:13px;font-weight:normal;padding:0;}
+    #powers fieldset label{width:auto;}
+    #powers .options label{width:auto;margin-right:1em;}
+    #powers .item{white-space:nowrap;display: inline-block;}
+    #powers input:checked~label{color:red;}
+</style>
+<script type="text/javascript" src="{{.viewpath}}/Js/jquery-1.7.2.min.js"></script>
+<script language="JavaScript">
+$(function() {
+    var power_usergroup = eval({{.Jspower}});
+	console.log(power_usergroup);
+    if(power_usergroup){
+        for(var i in power_usergroup){
+            $("#power_"+power_usergroup[i].PowerId).prop("checked",true);
+        }
+    }
+    var groups = {};
+	$(".item").each(function(){
+	    var $label = $(this).find("label");
+	    var str = $label.text().split("：");
+	    if(str.length==2){
+	        if(!groups[str[0]]){
+	            groups[str[0]] = [];
+	        }
+	        groups[str[0]].push($(this));
+	        $label.text(str[1]);
+	    }
+	}).remove();
+	for(var title in groups){
+        var $fieldset = $("<fieldset>"),
+	        $legend = $("<legend>").appendTo($fieldset),
+	        $options = $("<div>").addClass("options").appendTo($fieldset);
+	        $checkAll = $("<input/>",{"type":"checkbox","id":"powers_"+title}).change(function(){
+    	        $(this).parent().next().find("input[type=checkbox]").prop("checked",$(this).prop("checked"));
+    	    }).appendTo($legend);
+	    $legend.append($("<label>",{"for":"powers_"+title}).text(title));
+	    var checkAll = true;
+	    for(var i in groups[title]){
+	        groups[title][i].appendTo($options);
+	        if(checkAll&&!groups[title][i].find("[type=checkbox]").prop("checked")){
+	            checkAll = false;
+	        }
+	    }
+	    $checkAll.prop("checked",checkAll);
+	    $fieldset.appendTo($("#powers"));
+	}
+	//console.log(groups);
+});
+
+</script>
+</head>
+
+<body>
+<div class="add">
+<form method="post" id="form">
+    <fieldset>
+    <legend>
+	{{if eq .ACTION_NAME "Add"}}
+	添加	
+	{{else}}	
+	修改	
+	{{end}}
+	用户组
+	</legend>
+<p>
+<label for="group_name">用户组名称：</label>
+<input type="text"size="40" name="group_name" id="group_name" value="{{.Data.GroupName}}"{{if ne .ACTION_NAME "Add"}}readonly="readonly"{{end}} />
+<span class="group_name">*</span><input type="hidden" name="id" value="{{.Data.Id}}" />
+</p>
+<p>
+<label for="description">用户组描述：</label>
+<textarea rows="8" cols="40" id="description" name="description">{{.data.Description}}</textarea>
+
+
+<p><label for="active">组是否可用：</label>
+{{if eq .UserGroupId 0}}
+	<input name="active" id="active1" type="radio" checked="checked" value="1"  /> 
+	<label for="active" class="inline">可用</label>
+	<input name="active" id="active2" type="radio" value="0" />
+	<label for="active" class="inline">不可用</label>
+{{else}}
+	{{if eq .Data.Active 1}}
+		<input name="active" id="active1" type="radio" checked="checked" value="1"  /> 
+		<label for="active" class="inline">可用</label>
+		<input name="active" id="active2" type="radio" value="0" />
+		<label for="active" class="inline">不可用</label>
+	{{else}}
+		<input name="active" id="active1" type="radio"  value="1"  /> 
+		<label for="active" class="inline">可用</label>
+		<input name="active" id="active2" type="radio" checked="checked" value="0" />
+		<label for="active" class="inline">不可用</label>
+	{{end}}
+{{end}}
+</p>
+
+<div id="powers">
+    <p><label for="power">组权限指派：</label></p>
+   {{range $index, $vo := .Power}}
+        <span class="item" id="item_{{$vo.Id}}">
+            <input size="40" type="checkbox" id="power_{{$vo.Id}}" name="power" value="{{$vo.Id}}"/>
+            <label for="power_{{$vo.Id}}">{{$vo.PowerName}}</label>
+        </span>
+    {{end}}
+</div>
+
+<button class="button_grey" type="submit" name="submit" id="savebtn"><span>保 存</span></button>
+  </fieldset>
+</form></div>
+</body>
+</html>

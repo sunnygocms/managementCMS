@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
-	"time"
+	//	"time"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -15,7 +15,7 @@ type SunnyUserGroup struct {
 	GroupName   string `orm:"column(group_name);size(255);null"`
 	EditId      int    `orm:"column(edit_id);null"`
 	Description string `orm:"column(description);size(255);null"`
-	Active      int    `orm:"column(active);null"`
+	Active      int    `orm:"column(active)";null`
 }
 
 func (t *SunnyUserGroup) TableName() string {
@@ -46,25 +46,20 @@ func GetSunnyUserGroupById(id int) (v *SunnyUserGroup, err error) {
 }
 
 //get user_group
-func GetAllUserGroup() (ml []interface{}, err error) {
-	key := "AllUserGroup"
-	if mycache.IsExist(key) {
-		return mycache.Get(key).([]interface{}), nil
-	} else {
-
-		o := orm.NewOrm()
-		var usergroup []SunnyUserGroup
-		num, _ := o.Raw("select * from sunny_user_group").QueryRows(&usergroup)
-		if num > 0 {
-			for _, v := range usergroup {
-				ml = append(ml, v)
-			}
-			mycache.Put(key, ml, 600*time.Second)
-			return ml, nil
-		} else {
-			return nil, errors.New("not find")
+func GetAllUserGroup(where string) (ml []interface{}, err error) {
+	o := orm.NewOrm()
+	var usergroup []SunnyUserGroup
+	num, _ := o.Raw("select * from sunny_user_group " + where).QueryRows(&usergroup)
+	if num > 0 {
+		for _, v := range usergroup {
+			ml = append(ml, v)
 		}
+
+		return ml, nil
+	} else {
+		return nil, errors.New("not find")
 	}
+
 }
 
 // GetAllSunnyUserGroup retrieves all SunnyUserGroup matches certain condition. Returns empty list if
@@ -167,6 +162,21 @@ func DeleteSunnyUserGroup(id int) (err error) {
 		if num, err = o.Delete(&SunnyUserGroup{Id: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
+	}
+	return
+}
+
+//判断用户是不是已经存在
+func IsExistUsergroupByUsername(name string) (b bool) {
+	var v []*SunnyUserGroup
+	o := orm.NewOrm()
+	user := new(SunnyUserGroup)
+	qs := o.QueryTable(user)
+	qs.Filter("group_name", name).All(&v)
+	if len(v) == 0 {
+		b = false
+	} else {
+		b = true
 	}
 	return
 }

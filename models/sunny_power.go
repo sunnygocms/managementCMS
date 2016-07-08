@@ -52,6 +52,50 @@ func GetSunnyPowerById(id int) (v *SunnyPower, err error) {
 	}
 	return nil, err
 }
+func ClearPowerCacheById(id int) {
+	key := "power" + strconv.Itoa(id)
+	mycache.Delete(key)
+}
+func ClearPowerCacheAll() {
+	key := "AllSunnyPower"
+	mycache.Delete(key)
+}
+
+//这个是给编辑这个表使用的，所以没有缓存
+func GetPowerAll() (ml []interface{}, err error) {
+	o := orm.NewOrm()
+	var sunnypower []SunnyPower
+	num, _ := o.Raw("select * from sunny_power ORDER BY controller ASC,action ASC").QueryRows(&sunnypower)
+	if num > 0 {
+		for _, v := range sunnypower {
+			ml = append(ml, v)
+		}
+		return ml, nil
+	} else {
+		return nil, errors.New("not find")
+	}
+}
+
+//这个是为了给所有用户判断权利使用的，所以加上了缓存
+func GetSunnyPowerAll() (ml []interface{}, err error) {
+	key := "AllSunnyPower"
+	if mycache.IsExist(key) {
+		return mycache.Get(key).([]interface{}), nil
+	} else {
+		o := orm.NewOrm()
+		var sunnypower []SunnyPower
+		num, _ := o.Raw("select * from sunny_power").QueryRows(&sunnypower)
+		if num > 0 {
+			for _, v := range sunnypower {
+				ml = append(ml, v)
+			}
+			mycache.Put(key, ml, 600*time.Hour)
+			return ml, nil
+		} else {
+			return nil, errors.New("not find")
+		}
+	}
+}
 
 //得到权限map
 func GetEditorPowersById(id int) (userpower interface{}, err error) { //
@@ -238,4 +282,38 @@ func GetEditorPowers(editorID int) (ml []interface{}, err error) {
 		return nil, err
 	}
 
+}
+
+func ClearPowerCacheAllById() {
+	var fields = []string{"Id"}
+	var limit int64 = 100
+	var offset int64 = 0
+	l, err := GetAllEditor(fields, offset, limit)
+	if err != nil {
+		fmt.Println("error")
+	} else {
+
+		for _, v := range l {
+			p := v.(map[string]interface{})
+			for _, id := range p {
+				key := "power" + strconv.Itoa(id.(int))
+				mycache.Delete(key)
+			}
+		}
+	}
+}
+
+//判断用户是不是已经存在
+func IsExistPowerByUsername(name string) (b bool) {
+	var v []*SunnyPower
+	o := orm.NewOrm()
+	user := new(SunnyPower)
+	qs := o.QueryTable(user)
+	qs.Filter("power_name", name).All(&v)
+	if len(v) == 0 {
+		b = false
+	} else {
+		b = true
+	}
+	return
 }
