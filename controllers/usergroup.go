@@ -72,8 +72,8 @@ func (this *UsergroupController) Add() {
 			if err != nil {
 				this.Info(err)
 			} else {
-				models.DeleteSunnyUsergroupAndPower(int(id)) //删除这个序号的所有权限
-				if ui.Active == 1 {                          //只有可用的才可以添加权限
+				models.DeleteSunnyUsergroupAndPowerByUserGroupId(int(id)) //删除这个序号的所有权限
+				if ui.Active == 1 {                                       //只有可用的才可以添加权限
 					for _, check := range ui.Power {
 						var s models.SunnyUsergroupAndPower
 						s.PowerId = check
@@ -120,8 +120,8 @@ func (this *UsergroupController) Edit() {
 				this.Success("修改失败", "/usergroup/list", 4)
 				return
 			} else {
-				err := models.DeleteSunnyUsergroupAndPower(ui.Id) //删除这个序号的所有权限
-				this.Info(err)
+				_ = models.DeleteSunnyUsergroupAndPowerByUserGroupId(ui.Id) //删除这个序号的所有权限
+				//				this.Info(err)
 				if ui.Active == 1 { //只有可用的才可以添加权限
 					for _, check := range ui.Power {
 						var s models.SunnyUsergroupAndPower
@@ -166,8 +166,8 @@ func (this *UsergroupController) Del() {
 	var id int
 	mapp := this.Ctx.Input.Params()
 	id, _ = strconv.Atoi(mapp["1"])
-	models.DeleteSunnyUsergroupAndPower(id)         //删除这个序号的所有权限
-	models.DeleteSunnyUserAndGroupByUserGroupId(id) //删除用户属于这个组
+	models.DeleteSunnyUsergroupAndPowerByUserGroupId(id) //删除这个序号的所有权限
+	models.DeleteSunnyUserAndGroupByUserGroupId(id)      //删除用户属于这个组
 	if err := models.DeleteSunnyUserGroup(id); err == nil {
 		this.Success("删除成功了", "/usergroup/list", 4)
 	} else {

@@ -14,7 +14,7 @@ type PowerController struct {
 	BaseController
 }
 type PowerInput struct {
-	Id         int    `form:"_"`
+	Id         int    `form:"id"`
 	PowerName  string `form:"power_name"`
 	Controller string `form:"controller"`
 	Action     string `form:"action"`
@@ -59,7 +59,20 @@ func (this *PowerController) Add() {
 				this.Error("这个权限名称已经被使用", "-1", 4)
 				return
 			}
-			//			models.ClearPowerCacheById(powerI.Id)
+			var data models.SunnyPower
+			data.Id = powerI.Id
+			data.Action = powerI.Action
+			data.Controller = powerI.Controller
+			data.PowerName = powerI.PowerName
+			//			this.Info(data)
+			_, err := models.AddSunnyPower(&data)
+			if err != nil {
+				this.Success("添加失败", "/power/list", 4)
+				return
+			} else {
+				models.ClearPowerCacheById(powerI.Id)
+				this.Success("添加成功了", "/power/list", 4)
+			}
 		}
 	} else {
 		_, action_name := this.GetControllerAndAction()
@@ -83,10 +96,18 @@ func (this *PowerController) Edit() {
 
 			var data models.SunnyPower
 			data.Id = powerI.Id
-			//			data. = powerI
-			//			data.Description = powerI.Description
-			//			data.EditId = this.GetEditorId()
-			models.ClearPowerCacheById(powerI.Id)
+			data.Action = powerI.Action
+			data.Controller = powerI.Controller
+			data.PowerName = powerI.PowerName
+			//			this.Info(data)
+			err := models.UpdateSunnyPowerById(&data)
+			if err != nil {
+				this.Success("修改失败", "/power/list", 4)
+				return
+			} else {
+				models.ClearPowerCacheById(powerI.Id)
+				this.Success("修改成功了", "/power/list", 4)
+			}
 		}
 
 	} else {
@@ -103,5 +124,14 @@ func (this *PowerController) Edit() {
 }
 
 func (this *PowerController) Del() {
+	var id int
+	mapp := this.Ctx.Input.Params()
+	id, _ = strconv.Atoi(mapp["1"])
 	models.ClearPowerCacheAll()
+	models.DeleteSunnyUsergroupAndPowerByPowerId(id)
+	if err := models.DeleteSunnyPower(id); err == nil {
+		this.Success("删除成功了", "/power/list", 4)
+	} else {
+		this.Success("删除失败", "/power/list", 4)
+	}
 }

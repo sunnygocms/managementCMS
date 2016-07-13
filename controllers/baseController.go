@@ -3,8 +3,8 @@ package controllers
 import (
 	"crypto/md5"
 	"encoding/hex"
-	//	"fmt"
 	"encoding/json"
+	//	"fmt"
 	"strconv"
 
 	"github.com/astaxie/beego"

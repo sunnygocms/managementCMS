@@ -43,8 +43,15 @@ func AddSunnyUsergroupAndPower(m *SunnyUsergroupAndPower) (id int64, err error) 
 }
 
 //Delete
-func DeleteSunnyUsergroupAndPower(id int) (err error) {
+func DeleteSunnyUsergroupAndPowerByUserGroupId(id int) (err error) {
 	o := orm.NewOrm()
 	_, err = o.Raw("Delete from sunny_usergroup_and_power where  user_group_id = ?", id).Exec()
+	return
+}
+
+//Delete by power_id
+func DeleteSunnyUsergroupAndPowerByPowerId(id int) (err error) {
+	o := orm.NewOrm()
+	_, err = o.Raw("Delete from sunny_usergroup_and_power where  power_id = ?", id).Exec()
 	return
 }
