@@ -34,9 +34,9 @@ func (this *PowerController) List() {
 	} else {
 		this.Data["Power"] = l
 	}
-	this.Info(l)
+	//	this.Info(l)
 	this.Data["Power"] = l
-	this.Data["Id"] = this.GetEditorId()
+	//	this.Data["Id"] = this.GetEditorId()
 	this.TplName = "power/list.html"
 }
 

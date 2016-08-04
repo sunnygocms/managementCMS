@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Channel</title>
+		<link href="__PUBLIC__/Css/tab.css" rel="stylesheet" type="text/css" />
+        <link href="__PUBLIC__/Css/mln.colselect.css" rel="stylesheet" type="text/css" />
+		<script src="__PUBLIC__/Js/jquery-1.8.0.min.js"></script>
+		<script src="__PUBLIC__/Js/jquery.validate.js"></script>
+		<script>
+		$(document).ready(function(){
+			$("#form").validate({
+                ignore:"",
+				rules: {
+					name: "required"
+				}
+			});
+		});
+		</script>
+	</head>
+
+	<body>
+		<div class="add">
+			<form method="post" name="form" id="form" enctype="multipart/form-data">
+				<fieldset>
+					<legend>
+						<if condition="ACTION_NAME eq 'add'">添加<else/>修改</if>菜单
+					</legend>
+					<p>
+						<label for="name">菜单名称：</label>
+						<input type="text"size="40" name="name" id="name" value="{$channel['name']}"/>
+					</p>
+                    <p>
+                        <label for="parent_id">上级分类：</label>
+                        <span id="parent_id" style="display:inline-block"></span>
+                        <script src="{:U('Navigation/jsTree','id=parent_id&justLeaf=false&value='.$channel['parent_id'])}"></script>
+                    </p>
+                    <p>
+                        <label for="module">Module：</label>
+                        <input type="text"size="40" name="module" id="module" value="{$channel['module']}"/>
+                    </p>
+                    <p>
+                        <label for="action">Action：</label>
+                        <input type="text"size="40" name="action" id="action" value="{$channel['action']}"/>
+                    </p>
+					<p>
+						<label for="sort">排序：</label>
+						<input type="number" size="3" name="sort" id="sort" value="{$channel['sort']|default=0}"/>
+						<span class="field_desc"> 数值越小越靠前</span>
+					</p>
+					<p>
+					    <label>是否可见：</label>
+					    <input type="radio" name="display" value="1" id="display_1" <if condition="$channel['display']">checked="checked"</if>/><label for="display_1">可见</label>
+                        <input type="radio" name="display" value="0" id="display_0" <if condition="!$channel['display']">checked="checked"</if>/><label for="display_0">隐藏</label>
+					</p>
+					<button class="button_grey" type="submit" name="submit"><span>保 存</span></button>
+					<button class="button_grey" type="button" onclick="history.back()"><span>取消</span></button>
+				</fieldset>
+			</form>
+		</div>
+	</body>
+</html>

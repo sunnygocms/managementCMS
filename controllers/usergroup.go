@@ -32,7 +32,7 @@ func (this *UsergroupController) List() {
 		this.Data["Usergroup"] = l
 	}
 	models.ClearPowerCacheAllById()
-	this.Data["Id"] = this.GetEditorId()
+	//	this.Data["Id"] = this.GetEditorId()
 	this.TplName = "usergroup/list.html"
 }
 

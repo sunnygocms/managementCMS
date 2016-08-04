@@ -1,0 +1,19 @@
+(function($){
+	function init(){
+		$('#{$id}').mlnColsel({$json},
+		{
+			title:'请选择分类',
+			value:"{$value}",
+			width:100,
+			justLeaf:{$justLeaf}
+		});	
+	}
+	if("mlnColsel" in $.fn){
+		init();
+	}
+	else{
+		$.getScript("{{.viewpath}}/Js/mln.colselect.js",function(){
+			init();
+		});
+	}
+})(jQuery);

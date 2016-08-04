@@ -150,3 +150,17 @@ func DeleteSunnyNavigation(id int) (err error) {
 	}
 	return
 }
+
+func GetNavigationAll() (ml []SunnyNavigation, err error) {
+	o := orm.NewOrm()
+	var data []SunnyNavigation
+	num, _ := o.Raw("select * from sunny_navigation ORDER BY level asc,parent_id asc,sort asc,id asc").QueryRows(&data)
+	if num > 0 {
+		for _, v := range data {
+			ml = append(ml, v)
+		}
+		return ml, nil
+	} else {
+		return nil, errors.New("not find")
+	}
+}

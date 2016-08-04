@@ -23,6 +23,7 @@ func (this *BaseController) Prepare() {
 	controller, action := this.GetControllerAndAction()
 	sess_username, _ := this.GetSession("editor_username").(string)
 	this.Data["viewpath"] = "/static"
+	this.Data["Id"] = this.GetEditorId()
 	if controller != "LoginController" && action != "Get" {
 		if len(sess_username) == 0 {
 			this.Ctx.Redirect(302, "/login")

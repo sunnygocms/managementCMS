@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>无标题文档</title>
+		<link href="{{.viewpath}}/Css/tab.css" rel="stylesheet" type="text/css" />
+        <script src="{{.viewpath}}/Js/jquery-1.8.0.min.js"></script>
+        <style>
+            .collect-icon{
+                display:inline-block;width:11px;
+                font-size:10px;
+                line-height: 11px;text-align: center;
+                margin-right:4px;
+                border:1px solid #888;
+                color:#888;
+                cursor: pointer;
+                border-radius:2px;
+                background: #fff;
+                visibility:hidden;
+            }
+        </style>
+		<script>
+            $(function() {
+                $(".del").click(function() {
+                    return confirm("确定要删除此记录吗？");
+                });
+            });
+			$(function(){
+			    $("tr.row").each(function(){
+                    var cls = $(this).attr("class");
+                    var level = parseInt(cls.substr(cls.indexOf('level_')+6).split(" ")[0]);
+                    if($(this).next().hasClass("level_"+(level+1))){
+                        $(this).find(".collect-icon").text("-");
+                        $(this).find(".collect-icon").css("visibility","visible");
+                    }
+                    $(this).data("level",level);
+			    }).click(function(e){
+			       if(e.target.nodeName!="A"){
+                        var $tr = $(this);
+                        var level = $tr.data("level");
+                        if($tr.next().hasClass("level_"+(level+1))){
+                            var show = $tr.hasClass("collected");
+                            if(show){
+                                $tr.removeClass("collected");
+                                $tr.find(".collect-icon").text("-");
+                            }
+                            else{
+                                $tr.addClass("collected");
+                                $tr.find(".collect-icon").text("+");
+                            }
+                            var hideLevel = 0;
+                            while(($tr = $tr.next()).length&&$tr.data("level")>level){
+                                if(show){
+                                    if(hideLevel){
+                                        if(hideLevel == $tr.data("level")){
+                                            hideLevel = 0;
+                                        }
+                                        else{
+                                            continue;
+                                        }
+                                    }
+                                    $tr.show();
+                                    if($tr.hasClass("collected")){
+                                        hideLevel = $tr.data("level");
+                                    }
+                                }
+                                else{
+                                    $tr.hide();   
+                                }
+                            }
+                        }
+			       } 
+			    });
+			})
+		</script>
+	</head>
+	<body>
+		<div class="box-head">
+			<h2>分类列表</h2>
+		</div>
+		<div class="box-body" >
+            <div class="pagination">
+                <div class="operation">
+				{{if checkIsHref "navigation" "add" .Id  }}
+                    <a href="/navigation/add"><span>添加菜单</span></a>
+				{{end}}
+                </div>
+            </div>
+			<table class="sortable" id="tb-1" width="98%"  cellspacing="0" cellpadding="0">
+				<thead>
+					<tr>
+						<th width="50">ID</th>
+						<th>菜单名称</th>
+						<th width="120">Controller</th>
+						<th width="100">Action</th>
+						<th>排序</th>
+						<th>状态</th>
+						<th width="150">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{range $index, $item := .Navigation}}
+					<tr class="row level_{{$item.Level}}">
+						<th>{{$item.Id}}</th>
+						<td>
+                            &nbsp;&nbsp;
+						    <span class="collect-icon"></span>
+							{{if checkIsHref "navigation" "edit" $.Id  }}
+								 <a href="/navigation/edit/id/{{$item.Id}}">{{$item.Name}}</a>
+							{{else}}
+								{{$item.Name}}
+							{{end}}
+                        </td>
+                        <td>{{$item.Controller}}</td>
+                        <td>{{$item.Action}}</td>
+						<td>
+                            {{$item.Sort}}
+                        </td>
+						<td>
+							{{if eq $item.Display 0}}
+								隐藏
+							{{else}}
+								&nbsp;
+							{{end}}
+						</td>
+						<td>
+							{{if checkIsHref "navigation" "edit" $.Id  }}
+                               <a href="/navigation/edit/id/{{$item.Id}}">【编辑】</a>
+							{{end}}
+							{{if checkIsHref "navigation" "del" $.Id  }}
+                               <a href="/navigation/del/id/{{$item.Id}}" class="del">【删除】</a>
+							{{end}}
+						</td>
+					</tr>
+					{{end}}
+				</tbody>
+			</table>
+			<div class="pagination">
+				<div class="operation">
+					{{if checkIsHref "navigation" "add" .Id  }}
+                   	 <a href="/navigation/add"><span>添加菜单</span></a>
+					{{end}}
+				</div>
+			</div>
+		</div>
+
+	</body>
+</html>

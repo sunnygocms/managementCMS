@@ -65,7 +65,7 @@ func (this *EditorController) List() {
 	} else {
 		this.Data["Editor"] = l
 	}
-	this.Data["Id"] = this.GetEditorId()
+	//	this.Data["Id"] = this.GetEditorId()
 	this.TplName = "editor/list.html"
 }
 
