@@ -32,7 +32,13 @@
                     if($(this).next().hasClass("level_"+(level+1))){
                         $(this).find(".collect-icon").text("-");
                         $(this).find(".collect-icon").css("visibility","visible");
-                    }
+                    }else{
+						if(cls=="row level_0"){
+							$(this).find(".collect-icon").text("-");
+                        	$(this).find(".collect-icon").css("visibility","visible");
+						}
+					}
+					
                     $(this).data("level",level);
 			    }).click(function(e){
 			       if(e.target.nodeName!="A"){

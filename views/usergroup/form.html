@@ -16,7 +16,7 @@
 <script language="JavaScript">
 $(function() {
     var power_usergroup = eval({{.Jspower}});
-	console.log(power_usergroup);
+	//console.log(power_usergroup);
     if(power_usergroup){
         for(var i in power_usergroup){
             $("#power_"+power_usergroup[i].PowerId).prop("checked",true);

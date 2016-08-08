@@ -60,7 +60,7 @@ func (this *PowerController) Add() {
 				return
 			}
 			var data models.SunnyPower
-			data.Id = powerI.Id
+			//			data.Id = powerI.Id
 			data.Action = powerI.Action
 			data.Controller = powerI.Controller
 			data.PowerName = powerI.PowerName
@@ -132,6 +132,6 @@ func (this *PowerController) Del() {
 	if err := models.DeleteSunnyPower(id); err == nil {
 		this.Success("删除成功了", "/power/list", 4)
 	} else {
-		this.Success("删除失败", "/power/list", 4)
+		this.Error("删除失败", "-1", 4)
 	}
 }

@@ -201,7 +201,7 @@ func (this *EditorController) Del() {
 	if err := models.UpdateDelSunnyEditorById(&sunnyeditor); err == nil {
 		this.Success("删除成功了", "/editor/list", 4)
 	} else {
-		this.Success("删除失败", "/editor/list", 4)
+		this.Error("删除失败", "/editor/list", 4)
 	}
 
 }

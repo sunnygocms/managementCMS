@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/astaxie/beego/orm"
@@ -18,6 +19,11 @@ type SunnyNavigation struct {
 	Name       string `orm:"column(name);size(32)"`
 	Sort       int    `orm:"column(sort)"`
 	Display    int8   `orm:"column(display)"`
+}
+type SunnyNavigationJsTree struct {
+	Id       string `orm:"column(id);auto"`
+	ParentId string `orm:"column(parent_id)"`
+	Name     string `orm:"column(name);size(32)"`
 }
 
 func (t *SunnyNavigation) TableName() string {
@@ -163,4 +169,29 @@ func GetNavigationAll() (ml []SunnyNavigation, err error) {
 	} else {
 		return nil, errors.New("not find")
 	}
+}
+
+func GetNavigationJsItem() (ml []interface{}, err error) {
+	o := orm.NewOrm()
+	var data []SunnyNavigationJsTree
+	num, _ := o.Raw("select id,parent_id,name from sunny_navigation where display=1 ORDER BY level asc,sort asc,id asc").QueryRows(&data)
+	if num > 0 {
+		for _, v := range data {
+			ml = append(ml, v)
+		}
+		return ml, nil
+	} else {
+		return nil, errors.New("not find")
+	}
+}
+
+func IsExistNavigationSon(id int) (b bool) {
+	b = false
+	o := orm.NewOrm()
+	var data []SunnyNavigation
+	num, _ := o.Raw("select * from sunny_navigation where parent_id =" + strconv.Itoa(id)).QueryRows(&data)
+	if num > 0 {
+		b = true
+	}
+	return
 }

@@ -171,6 +171,6 @@ func (this *UsergroupController) Del() {
 	if err := models.DeleteSunnyUserGroup(id); err == nil {
 		this.Success("删除成功了", "/usergroup/list", 4)
 	} else {
-		this.Success("删除失败", "/usergroup/list", 4)
+		this.Error("删除失败", "-1t", 4)
 	}
 }

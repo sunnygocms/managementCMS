@@ -1,11 +1,15 @@
 (function($){
 	function init(){
-		$('#{$id}').mlnColsel({$json},
+		var json = "{{.Jspower}}";
+		json=json.replace(/&#34;/g,"\"")
+		//console.log(json);
+		obj=eval('(' +json+')');
+		$('#{{.Data.Id}}').mlnColsel(obj,
 		{
 			title:'请选择分类',
-			value:"{$value}",
+			value:"{{.Data.Value}}",
 			width:100,
-			justLeaf:{$justLeaf}
+			justLeaf:{{.Data.JustLeaf}}
 		});	
 	}
 	if("mlnColsel" in $.fn){
